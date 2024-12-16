@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.Set;
@@ -32,16 +31,17 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
     private IUserDAO userDAO;
     private JWTService jwtService;
 
+    @Context
+    private SecurityContext securityContext;
+
     public JwtAuthenticationFilter() {
     }
 
+    @Inject
     public JwtAuthenticationFilter(IUserDAO userDAO, JWTService jwtService) {
         this.userDAO = userDAO;
         this.jwtService = jwtService;
     }
-
-    @Context
-    private SecurityContext securityContext;
 
     /**
      * Checks the validity of JWT for every request that does not belong to the
@@ -52,7 +52,6 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
         UriInfo uriInfo = containerRequestContext.getUriInfo();
-
         // Check if the path is public
         if (isPublicPath(uriInfo.getPath())) {
             return;
@@ -77,10 +76,12 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                 // Validate token and set SecurityContext if valid
                 if (user != null && jwtService.isTokenValid(token, user)) {
                     containerRequestContext.setSecurityContext(new CustomSecurityContext(user));
+                    return;
                 } else {
                     throw new NotAuthorizedException("Invalid token.");
                 }
             }
+
         } catch (Exception e) {
             throw new NotAuthorizedException("Invalid token.");
         }

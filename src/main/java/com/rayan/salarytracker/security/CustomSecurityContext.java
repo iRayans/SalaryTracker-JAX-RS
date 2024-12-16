@@ -9,37 +9,31 @@ import jakarta.ws.rs.core.SecurityContext;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.security.Principal;
+@RequestScoped
+@NoArgsConstructor
+@AllArgsConstructor
+public class CustomSecurityContext implements SecurityContext {
 
+    private User user;
 
-    @RequestScoped
-    public class CustomSecurityContext implements SecurityContext {
-    
-        private final User user;
-    
-        public CustomSecurityContext(User user) {
-            this.user = user;
-        }
-    
-        @Override
-        public Principal getUserPrincipal() {
-            return () -> user.getEmail(); // Return email as Principal's name
-        }
-    
-        @Override
-        public boolean isUserInRole(String role) {
-            // Role-based checks not implemented
-            return false;
-        }
-    
-        @Override
-        public boolean isSecure() {
-            return true; // Assume HTTPS is used
-        }
-    
-        @Override
-        public String getAuthenticationScheme() {
-            return "Bearer";
-        }
+    @Override
+    public Principal getUserPrincipal() {
+        return user;
     }
 
+    @Override
+    public boolean isUserInRole(String role) {
+        // Role-based checks not implemented
+        return false;
+    }
+
+    @Override
+    public boolean isSecure() {
+        return false; // Assume HTTPS is used
+    }
+
+    @Override
+    public String getAuthenticationScheme() {
+        return "Bearer";
+    }
+}

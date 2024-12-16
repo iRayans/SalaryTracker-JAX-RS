@@ -62,20 +62,21 @@ public class AuthenticationRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUser(UserLoginDTO userLoginDTO, @Context Principal principal) {
-        System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword());
+        System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword() );
+
         // Authentication
         boolean isAuthenticated = authenticationProvider.authenticate(userLoginDTO);
         if (!isAuthenticated) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        // If principal != null then user has already logged in.
-        if (principal != null) {
-            String email = principal.getName();
-            if (userLoginDTO.getEmail().equals(email)) {
-                return Response.status(Response.Status.OK).entity("Already authenticated").build();
-            }
-        }
+        // Commented out for now...
+        // if (principal != null) {
+        //     String username = principal.getName();
+        //     if (userLoginDTO.getEmail().equals(username)) {
+        //         return Response.status(Response.Status.OK).entity("Already authenticated").build();
+        //     }
+        // }
 
         UserReadOnlyDTO userReadOnlyDTO = userService.findUserByEmail(userLoginDTO.getEmail());
         String username = userReadOnlyDTO.getName();
