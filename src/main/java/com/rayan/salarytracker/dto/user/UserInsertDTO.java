@@ -1,6 +1,7 @@
 package com.rayan.salarytracker.dto.user;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,9 @@ import lombok.Setter;
 
 public class UserInsertDTO {
 
-    private String name;
-    
+    @Pattern(regexp = "\\w{2,30}", message = "Username must be 2-30 long and contain only letters, digits, or underscores.")
+    private String username;
+
     @Email(message = "Please enter a valid email")
     private String email;
 
@@ -26,4 +28,7 @@ public class UserInsertDTO {
 
     @Pattern(regexp = "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)(?=.*?[!@#%&*]).{8,}$", message = "Invalid password.")
     private String confirmPassword;
+
+    @NotEmpty(message = "Role must not be empty.")
+    private String role;
 }
