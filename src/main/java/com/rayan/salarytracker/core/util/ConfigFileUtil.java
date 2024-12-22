@@ -1,5 +1,9 @@
 package com.rayan.salarytracker.core.util;
 
+import com.rayan.salarytracker.core.util.validation.ValidatorUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Properties;
@@ -13,7 +17,9 @@ import java.net.URL;
  */
 
 public class ConfigFileUtil {
-    
+
+    private static final Logger LOGGER = LogManager.getLogger(ConfigFileUtil.class.getName());
+
     private static final String CONFIGURATION_FILENAME = "config.properties";
 
     private ConfigFileUtil() {};
@@ -31,10 +37,10 @@ public class ConfigFileUtil {
             props.load(new FileInputStream(configPath));
             return props;
         } catch (FileNotFoundException e1) {
-            System.out.println("Config file not found.");
+            LOGGER.error("Config file not found.");
             return null;
         } catch (IOException e2) {
-            System.out.println("IOException: {}"+ e2.getMessage());
+            LOGGER.error("IOException: {}", e2.getMessage());
             return null;
         }
     }

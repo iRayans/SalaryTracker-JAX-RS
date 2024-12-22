@@ -7,12 +7,17 @@ import com.rayan.salarytracker.core.exception.PasswordsDoNotMatchException;
 import com.rayan.salarytracker.dao.IUserDAO;
 import com.rayan.salarytracker.dao.UserDAO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
+import com.rayan.salarytracker.filters.JwtAuthenticationFilter;
 import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.service.IUserService;
 import com.rayan.salarytracker.service.UserService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ValidatorUtil {
 
+    private static final Logger LOGGER = LogManager.getLogger(ValidatorUtil.class.getName());
 
 
     private static final IUserDAO userDAO = new UserDAO();

@@ -1,19 +1,21 @@
 package com.rayan.salarytracker.security;
 
-import java.security.Principal;
-
-import com.rayan.salarytracker.model.User;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+
+import java.security.Principal;
+
+import com.rayan.salarytracker.model.User;
 
 @RequestScoped
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomSecurityContext implements SecurityContext {
 
+    // User is injected by the constructor
     private User user;
 
     @Override
@@ -23,13 +25,13 @@ public class CustomSecurityContext implements SecurityContext {
 
     @Override
     public boolean isUserInRole(String role) {
-        // Role-based checks not implemented
-        return false;
+        return role.equals(user.getRole().name());
     }
 
     @Override
     public boolean isSecure() {
-        return false; // Assume HTTPS is used
+        // http and not https is used
+        return false;
     }
 
     @Override

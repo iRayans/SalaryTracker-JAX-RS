@@ -15,6 +15,9 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rayan.salarytracker.dao.IUserDAO;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.CustomSecurityContext;
@@ -23,6 +26,8 @@ import com.rayan.salarytracker.security.JWTService;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class JwtAuthenticationFilter implements ContainerRequestFilter {
+    private static final Logger LOGGER = LogManager.getLogger(JwtAuthenticationFilter.class.getName());
+
 
     private final static Set<String> PUBLIC_PATHS = Set.of(
             "/auth/register",
@@ -39,6 +44,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     public JwtAuthenticationFilter(IUserDAO userDAO, JWTService jwtService) {
+
         this.userDAO = userDAO;
         this.jwtService = jwtService;
     }
@@ -78,7 +84,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                     containerRequestContext.setSecurityContext(new CustomSecurityContext(user));
                     return;
                 } else {
-                    throw new NotAuthorizedException("Invalid token.");
+                    LOGGER.error("Invalid token.");
                 }
             }
 

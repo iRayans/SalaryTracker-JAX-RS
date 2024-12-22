@@ -11,6 +11,7 @@ import jakarta.persistence.Persistence;
 
 public class JPAHelperUtil {
     private static EntityManagerFactory emf;
+
     // EntityManager is not thread-safe. It is designed to be used by a single thread at a time.
     // Each thread needs its own EntityManager to ensure that the database transactions for that request are isolated from others. 
     // ThreadLocal It ensures that each thread handling a request has its own EntityManager and doesn't share it with other threads.

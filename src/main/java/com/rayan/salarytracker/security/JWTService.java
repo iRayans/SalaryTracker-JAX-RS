@@ -31,9 +31,10 @@ public class JWTService {
         JWT_EXPIRATION = Long.valueOf(configProperties.getProperty("jwt.expiration"));
     }
 
-    public String generateToken(String email, String name) {
+    public String generateToken(String email, String name,String role) {
         var claims = new HashMap<String, Object>();
         claims.put("username", name);
+        claims.put("role",role);
         return Jwts
                 .builder()
                 .setIssuer("st")

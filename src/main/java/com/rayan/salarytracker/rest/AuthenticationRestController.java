@@ -10,6 +10,7 @@ import com.rayan.salarytracker.core.util.validation.ValidatorUtil;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
+import com.rayan.salarytracker.filters.JwtAuthenticationFilter;
 import com.rayan.salarytracker.security.JWTService;
 import com.rayan.salarytracker.service.UserService;
 
@@ -22,10 +23,14 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Path("/auth")
 @ApplicationScoped
 public class AuthenticationRestController {
+
+    private static final Logger LOGGER = LogManager.getLogger(AuthenticationRestController.class.getName());
 
     private UserService userService;
     private AuthenticationProvider authenticationProvider;
@@ -80,9 +85,9 @@ public class AuthenticationRestController {
 
         UserReadOnlyDTO userReadOnlyDTO = userService.findUserByEmail(userLoginDTO.getEmail());
         String username = userReadOnlyDTO.getName();
-
+        String role = userReadOnlyDTO.getRole();
         // Create a JWT token for current user
-        String token = jwtService.generateToken(userLoginDTO.getEmail(), username);
+        String token = jwtService.generateToken(userLoginDTO.getEmail(), username,role);
         AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token);
 
         return Response.status(Response.Status.OK).entity(authenticationResponseDTO).build();

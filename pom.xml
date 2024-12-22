@@ -33,7 +33,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- Lombok dependency -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -60,7 +59,6 @@
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.1.Final</version>
         </dependency>
-
 
         <!-- Connection Pooling Hikari -->
         <dependency>
@@ -109,6 +107,20 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
         </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.23.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.23.1</version>
+        </dependency>
+
 
     </dependencies>
 
