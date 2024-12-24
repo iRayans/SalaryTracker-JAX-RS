@@ -1,20 +1,15 @@
 package com.rayan.salarytracker.rest;
 
-import java.util.List;
-
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
-import com.rayan.salarytracker.service.UserService;
-
+import com.rayan.salarytracker.service.impl.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
 
 @ApplicationScoped
 @Path("/users")
@@ -22,7 +17,8 @@ public class UserManagementRestController {
 
     private UserService userService;
 
-    public UserManagementRestController() {}
+    public UserManagementRestController() {
+    }
 
     @Inject
     public UserManagementRestController(UserService userService) {
@@ -32,7 +28,7 @@ public class UserManagementRestController {
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("userId") Long id){
+    public Response getUser(@PathParam("userId") Long id) {
         UserReadOnlyDTO userReadOnlyDTO = userService.getUserById(id);
         return Response.status(Response.Status.OK).entity(userReadOnlyDTO).build();
     }
@@ -44,7 +40,7 @@ public class UserManagementRestController {
         List<UserReadOnlyDTO> users = userService.getAllUsers();
         return Response.status(Response.Status.OK).entity(users).build();
     }
-    
+
     @DELETE
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)

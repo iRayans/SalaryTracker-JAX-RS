@@ -1,6 +1,4 @@
-package com.rayan.salarytracker.service;
-
-import java.util.List;
+package com.rayan.salarytracker.service.impl;
 
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
@@ -8,14 +6,15 @@ import com.rayan.salarytracker.dao.IUserDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
-import com.rayan.salarytracker.filters.JwtAuthenticationFilter;
 import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.model.User;
-
+import com.rayan.salarytracker.service.IUserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 @ApplicationScoped
 public class UserService implements IUserService {
@@ -105,6 +104,7 @@ public class UserService implements IUserService {
         JPAHelperUtil.commitTransaction();
         return users.stream().map(mapper::mapToUserReadOnlyDTO).toList();
     }
+
     @Override
     public UserReadOnlyDTO findUserByEmail(String email) throws EntityNotFoundException {
         try {

@@ -1,7 +1,5 @@
 package com.rayan.salarytracker.rest;
 
-import java.security.Principal;
-
 import com.rayan.salarytracker.authentication.AuthenticationProvider;
 import com.rayan.salarytracker.authentication.AuthenticationResponseDTO;
 import com.rayan.salarytracker.core.exception.AppServerException;
@@ -10,21 +8,21 @@ import com.rayan.salarytracker.core.util.validation.ValidatorUtil;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
-import com.rayan.salarytracker.filters.JwtAuthenticationFilter;
 import com.rayan.salarytracker.security.JWTService;
-import com.rayan.salarytracker.service.UserService;
-
+import com.rayan.salarytracker.service.impl.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.security.Principal;
 
 @Path("/auth")
 @ApplicationScoped
@@ -38,7 +36,7 @@ public class AuthenticationRestController {
 
     @Inject
     public AuthenticationRestController(UserService userService, AuthenticationProvider authenticationProvider,
-            JWTService jwtService) {
+                                        JWTService jwtService) {
         this.userService = userService;
         this.authenticationProvider = authenticationProvider;
         this.jwtService = jwtService;
@@ -67,7 +65,7 @@ public class AuthenticationRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUser(UserLoginDTO userLoginDTO, @Context Principal principal) {
-        System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword() );
+        System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword());
 
         // Authentication
         boolean isAuthenticated = authenticationProvider.authenticate(userLoginDTO);
@@ -87,7 +85,7 @@ public class AuthenticationRestController {
         String username = userReadOnlyDTO.getName();
         String role = userReadOnlyDTO.getRole();
         // Create a JWT token for current user
-        String token = jwtService.generateToken(userLoginDTO.getEmail(), username,role);
+        String token = jwtService.generateToken(userLoginDTO.getEmail(), username, role);
         AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token);
 
         return Response.status(Response.Status.OK).entity(authenticationResponseDTO).build();
