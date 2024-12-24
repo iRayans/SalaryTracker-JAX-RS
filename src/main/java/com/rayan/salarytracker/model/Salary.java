@@ -30,7 +30,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name="salaries")
-public class Salary {
+public class Salary implements IdentifiableEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
