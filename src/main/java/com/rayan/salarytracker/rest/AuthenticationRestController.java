@@ -70,6 +70,7 @@ public class AuthenticationRestController {
         // Authentication
         boolean isAuthenticated = authenticationProvider.authenticate(userLoginDTO);
         if (!isAuthenticated) {
+            LOGGER.error("email or password incorrect");
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 

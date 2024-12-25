@@ -1,5 +1,9 @@
 package com.rayan.salarytracker.filters;
 
+import com.rayan.salarytracker.dao.IUserDAO;
+import com.rayan.salarytracker.model.User;
+import com.rayan.salarytracker.security.CustomSecurityContext;
+import com.rayan.salarytracker.security.JWTService;
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -11,17 +15,11 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
-
-import java.io.IOException;
-import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rayan.salarytracker.dao.IUserDAO;
-import com.rayan.salarytracker.model.User;
-import com.rayan.salarytracker.security.CustomSecurityContext;
-import com.rayan.salarytracker.security.JWTService;
+import java.io.IOException;
+import java.util.Set;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -89,6 +87,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
             }
 
         } catch (Exception e) {
+            LOGGER.error("Invalid token.");
             throw new NotAuthorizedException("Invalid token.");
         }
     }
