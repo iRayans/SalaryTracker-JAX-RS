@@ -2,6 +2,7 @@ package com.rayan.salarytracker.mapper;
 
 import com.rayan.salarytracker.core.enums.RoleType;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
+import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.model.Salary;
@@ -32,5 +33,9 @@ public class Mapper {
 
     public Salary mapToSalary(SalaryInsertDTO salaryInsertDTO) {
         return new Salary(null, salaryInsertDTO.getMonth(), salaryInsertDTO.getDescription(), salaryInsertDTO.getAmount(), null, null, salaryInsertDTO.getUser());
+    }
+
+    public SalaryReadOnlyDTO mapToSalaryReadOnlyDTO(Salary salary) {
+        return new SalaryReadOnlyDTO(salary.getId(), salary.getMonth(), salary.getDescription(), salary.getAmount(), salary.getCreatedAt(), salary.getUpdatedAt());
     }
 }

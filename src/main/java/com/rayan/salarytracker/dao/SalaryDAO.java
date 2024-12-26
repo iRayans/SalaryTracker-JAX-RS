@@ -7,6 +7,10 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class SalaryDAO extends GenericCRUDImpl<Salary> implements ISalaryDAO {
+    public SalaryDAO() {
+        this.setPersistenceClass(Salary.class);
+    }
+
     @Override
     public Optional<Salary> findByMonth(String month) {
         return Optional.empty();
