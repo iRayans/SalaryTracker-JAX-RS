@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.security.Principal;
+import java.util.List;
 
 @Path("/salaries")
 @ApplicationScoped
@@ -30,6 +31,15 @@ public class SalaryRestController {
     }
 
     public SalaryRestController() {
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllSalaries() {
+        List<SalaryReadOnlyDTO> salaries = salaryService.getAllSalaries();
+        return Response.status(Response.Status.OK).entity(salaries).build();
+
     }
 
     @POST
@@ -49,12 +59,22 @@ public class SalaryRestController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Response updateSalary(@PathParam("id") Long salaryId, Salary salary) throws AppServerException {
-        // Handle null exception...
         User user = getLoggedinUser();
         salary.setUser(user);
 
         SalaryReadOnlyDTO salaryReadOnlyDTO = salaryService.updateSalary(salaryId, salary);
         return Response.status(Response.Status.CREATED).entity(salaryReadOnlyDTO).build();
+    }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response deleteSalary(@PathParam("id") Long salaryId) throws AppServerException {
+        User user = getLoggedinUser();
+        salaryService.deleteSalary(salaryId);
+        return Response.status(Response.Status.NO_CONTENT).build();
+
     }
 
     private User getLoggedinUser() {

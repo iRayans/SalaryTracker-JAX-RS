@@ -14,6 +14,8 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 @ApplicationScoped
 public class SalaryService implements ISalaryService {
 
@@ -30,6 +32,19 @@ public class SalaryService implements ISalaryService {
     }
 
     public SalaryService() {
+    }
+
+
+    @Override
+    public List<SalaryReadOnlyDTO> getAllSalaries() {
+        try {
+            JPAHelperUtil.beginTransaction();
+            List<Salary> salaries = salaryDAO.getAll();
+            JPAHelperUtil.commitTransaction();
+            return salaries.stream().map(mapper::mapToSalaryReadOnlyDTO).toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -63,21 +78,39 @@ public class SalaryService implements ISalaryService {
             Salary existingSalary = salaryDAO.getById(salaryId)
                     .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salary.getId() + " not found."));
 
-            existingSalary.setMonth(salary.getMonth() != null ? salary.getMonth() : existingSalary.getMonth());
-            existingSalary.setAmount(salary.getAmount() != 0 ? salary.getAmount() : existingSalary.getAmount());
-            existingSalary.setDescription(salary.getDescription() != null ? salary.getDescription() : existingSalary.getDescription());
+            // Update only provided fields
+            updateFields(existingSalary, salary);
 
             SalaryReadOnlyDTO salaryReadOnlyDTO = salaryDAO.update(existingSalary)
                     .map(mapper::mapToSalaryReadOnlyDTO)
                     .orElseThrow(() -> new AppServerException("Salary",
-                            "Salary with Month: " + existingSalary.getMonth() + "not updated."));
+                            "Salary with id: " + existingSalary.getId() + "not updated."));
             JPAHelperUtil.commitTransaction();
-            LOGGER.info("Salary with month: {} updated.", existingSalary.getMonth());
+            LOGGER.info("Salary with id: {} updated.", existingSalary.getId());
             return salaryReadOnlyDTO;
 
         } catch (AppServerException e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Salary with month: {} not inserted.", salary.getMonth());
+            LOGGER.error("Salary with id: {} not inserted.", salary.getMonth());
+            throw e;
+        } finally {
+            JPAHelperUtil.closeEntityManager();
+        }
+    }
+
+    @Override
+    public void deleteSalary(Long salaryId) throws EntityNotFoundException {
+        try {
+            JPAHelperUtil.beginTransaction();
+            salaryDAO.getById(salaryId)
+                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found."));
+            salaryDAO.delete(salaryId);
+            JPAHelperUtil.commitTransaction();
+            LOGGER.info("Salary with id: {} deleted.", salaryId);
+
+        } catch (EntityNotFoundException e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("Salary with id: {} not found for deletion.", salaryId, e);
             throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();
@@ -85,4 +118,9 @@ public class SalaryService implements ISalaryService {
     }
 
 
+    private void updateFields(Salary existing, Salary updated) {
+        existing.setMonth(updated.getMonth() != null ? updated.getMonth() : existing.getMonth());
+        existing.setAmount(updated.getAmount() != 0 ? updated.getAmount() : existing.getAmount());
+        existing.setDescription(updated.getDescription() != null ? updated.getDescription() : existing.getDescription());
+    }
 }
