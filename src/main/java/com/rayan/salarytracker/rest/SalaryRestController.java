@@ -42,6 +42,15 @@ public class SalaryRestController {
 
     }
 
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response getSalaryById(@PathParam("id") Long salaryId) {
+        SalaryReadOnlyDTO salary = salaryService.getSalaryById(salaryId);
+        return Response.status(Response.Status.OK).entity(salary).build();
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

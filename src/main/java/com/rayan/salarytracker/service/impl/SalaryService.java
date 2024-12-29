@@ -48,6 +48,26 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
+    public SalaryReadOnlyDTO getSalaryById(Long salaryId) {
+        try {
+            JPAHelperUtil.beginTransaction();
+            SalaryReadOnlyDTO salaryReadOnlyDTO = salaryDAO.getById(salaryId)
+                    .map(mapper::mapToSalaryReadOnlyDTO)
+                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found"));
+            JPAHelperUtil.commitTransaction();
+            LOGGER.info("Retrieve salary with id: " + salaryReadOnlyDTO.getId());
+            return salaryReadOnlyDTO;
+
+        } catch (EntityNotFoundException e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("Salary with id: {} not found.", salaryId, e);
+            throw e;
+        } finally {
+            JPAHelperUtil.closeEntityManager();
+        }
+    }
+
+    @Override
     public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException {
         try {
             JPAHelperUtil.beginTransaction();
@@ -116,7 +136,6 @@ public class SalaryService implements ISalaryService {
             JPAHelperUtil.closeEntityManager();
         }
     }
-
 
     private void updateFields(Salary existing, Salary updated) {
         existing.setMonth(updated.getMonth() != null ? updated.getMonth() : existing.getMonth());
