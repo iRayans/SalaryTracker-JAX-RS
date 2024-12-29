@@ -48,19 +48,23 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
-    public SalaryReadOnlyDTO getSalaryById(Long salaryId) {
+    public List<SalaryReadOnlyDTO> getSalaryById(Long userId) {
         try {
             JPAHelperUtil.beginTransaction();
-            SalaryReadOnlyDTO salaryReadOnlyDTO = salaryDAO.getById(salaryId)
-                    .map(mapper::mapToSalaryReadOnlyDTO)
-                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found"));
+            List<Salary> salaries = salaryDAO.findSalaryByUserId(userId);
+            List<SalaryReadOnlyDTO> salaryReadOnlyDTO = salaries.stream().map(mapper::mapToSalaryReadOnlyDTO).toList();
+
+//            List<SalaryReadOnlyDTO> salaryReadOnlyDTO = salaryDAO.getById(salaryId)
+//                    .map(mapper::mapToSalaryReadOnlyDTO)
+//                    .orElseThrow(() -> new EntityNotFoundException(
+//                            "Salary with id: " + salaryId + "not updated."));
             JPAHelperUtil.commitTransaction();
-            LOGGER.info("Retrieve salary with id: " + salaryReadOnlyDTO.getId());
+            LOGGER.info("Retrieve salary with id: " + userId);
             return salaryReadOnlyDTO;
 
         } catch (EntityNotFoundException e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Salary with id: {} not found.", salaryId, e);
+            LOGGER.error("Salary with id: {} not found.", userId, e);
             throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();

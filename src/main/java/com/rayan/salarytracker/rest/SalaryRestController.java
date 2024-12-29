@@ -45,9 +45,10 @@ public class SalaryRestController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
-    public Response getSalaryById(@PathParam("id") Long salaryId) {
-        SalaryReadOnlyDTO salary = salaryService.getSalaryById(salaryId);
+    public Response getUserSalaries() {
+        // Fetch salaries list based on logged-in user.
+        Long userId = getLoggedinUser().getId();
+        List<SalaryReadOnlyDTO> salary = salaryService.getSalaryById(userId);
         return Response.status(Response.Status.OK).entity(salary).build();
     }
 

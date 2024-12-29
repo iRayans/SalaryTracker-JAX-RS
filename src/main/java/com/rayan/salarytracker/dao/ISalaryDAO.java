@@ -2,8 +2,8 @@ package com.rayan.salarytracker.dao;
 
 import com.rayan.salarytracker.model.Salary;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ISalaryDAO extends IGenericCRUD<Salary> {
-    Optional<Salary> findByMonth(String month);
+    List<Salary> findSalaryByUserId(Long userId);
 }

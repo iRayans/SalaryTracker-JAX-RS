@@ -18,5 +18,5 @@ public interface ISalaryService {
 
     void deleteSalary(Long salaryId) throws EntityNotFoundException;
 
-    SalaryReadOnlyDTO getSalaryById(Long salaryId);
+    List<SalaryReadOnlyDTO> getSalaryById(Long salaryId);
 }
