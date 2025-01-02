@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -48,28 +49,37 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
-    public List<SalaryReadOnlyDTO> getSalaryById(Long userId) {
+    public List<SalaryReadOnlyDTO> getAllUserSalaries(Long userId) {
+        List<SalaryReadOnlyDTO> salaryReadOnlyDTOs = new ArrayList<>();
         try {
             JPAHelperUtil.beginTransaction();
-            List<Salary> salaries = salaryDAO.findSalaryByUserId(userId);
-            List<SalaryReadOnlyDTO> salaryReadOnlyDTO = salaries.stream().map(mapper::mapToSalaryReadOnlyDTO).toList();
 
-//            List<SalaryReadOnlyDTO> salaryReadOnlyDTO = salaryDAO.getById(salaryId)
-//                    .map(mapper::mapToSalaryReadOnlyDTO)
-//                    .orElseThrow(() -> new EntityNotFoundException(
-//                            "Salary with id: " + salaryId + "not updated."));
+            // Fetch salaries and map to DTOs
+            List<Salary> salaries = salaryDAO.findSalaryByUserId(userId);
+            if (salaries.isEmpty()) {
+                throw new EntityNotFoundException("No salaries found for user ID: " + userId);
+            }
+            salaryReadOnlyDTOs = salaries.stream()
+                    .map(mapper::mapToSalaryReadOnlyDTO)
+                    .toList();
+
             JPAHelperUtil.commitTransaction();
-            LOGGER.info("Retrieve salary with id: " + userId);
-            return salaryReadOnlyDTO;
+            LOGGER.info("Successfully retrieved salaries for user ID: {}", userId);
+            return salaryReadOnlyDTOs;
 
         } catch (EntityNotFoundException e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Salary with id: {} not found.", userId, e);
+            LOGGER.warn("No salaries found for user ID: {}", userId, e);
             throw e;
+        } catch (Exception e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("An error occurred while retrieving salaries for user ID: {}", userId, e);
+            throw new RuntimeException("Error retrieving salaries for user ID: " + userId, e);
         } finally {
             JPAHelperUtil.closeEntityManager();
         }
     }
+
 
     @Override
     public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException {
@@ -123,19 +133,28 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
-    public void deleteSalary(Long salaryId) throws EntityNotFoundException {
+    public void deleteSalary(Long salaryId, Long userId) throws EntityNotFoundException {
         try {
             JPAHelperUtil.beginTransaction();
-            salaryDAO.getById(salaryId)
-                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found."));
+
+            // Fetch the salary and validate ownership
+            Salary salary = salaryDAO.getById(salaryId)
+                    .filter(s -> s.getUser().getId().equals(userId))
+                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found or does not belong to user with id: " + userId));
+
+            // Delete the salary
             salaryDAO.delete(salaryId);
             JPAHelperUtil.commitTransaction();
-            LOGGER.info("Salary with id: {} deleted.", salaryId);
 
+            LOGGER.info("Salary with id: {} deleted successfully by user with id: {}.", salaryId, userId);
         } catch (EntityNotFoundException e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Salary with id: {} not found for deletion.", salaryId, e);
-            throw e;
+            LOGGER.error("Failed to delete salary with id: {} by user with id: {}. Reason: {}", salaryId, userId, e.getMessage(), e);
+            throw e; // Rethrow exception to notify caller
+        } catch (Exception e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("Unexpected error while deleting salary with id: {} by user with id: {}.", salaryId, userId, e);
+            throw new RuntimeException("An unexpected error occurred during deletion.", e);
         } finally {
             JPAHelperUtil.closeEntityManager();
         }

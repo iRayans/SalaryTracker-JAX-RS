@@ -36,20 +36,12 @@ public class SalaryRestController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSalaries() {
-        List<SalaryReadOnlyDTO> salaries = salaryService.getAllSalaries();
-        return Response.status(Response.Status.OK).entity(salaries).build();
-
-    }
-
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserSalaries() {
         // Fetch salaries list based on logged-in user.
         Long userId = getLoggedinUser().getId();
-        List<SalaryReadOnlyDTO> salary = salaryService.getSalaryById(userId);
-        return Response.status(Response.Status.OK).entity(salary).build();
+        List<SalaryReadOnlyDTO> salaries = salaryService.getAllUserSalaries(userId);
+
+        return Response.status(Response.Status.OK).entity(salaries).build();
     }
 
     @POST
@@ -63,7 +55,7 @@ public class SalaryRestController {
         return Response.status(Response.Status.CREATED).entity(salary).build();
     }
 
-    // TODO: use one method for insert/update a salary.
+    // TODO: use single method for insert/update a salary.
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,7 +74,8 @@ public class SalaryRestController {
     @Path("/{id}")
     public Response deleteSalary(@PathParam("id") Long salaryId) throws AppServerException {
         User user = getLoggedinUser();
-        salaryService.deleteSalary(salaryId);
+
+        salaryService.deleteSalary(salaryId, user.getId());
         return Response.status(Response.Status.NO_CONTENT).build();
 
     }
