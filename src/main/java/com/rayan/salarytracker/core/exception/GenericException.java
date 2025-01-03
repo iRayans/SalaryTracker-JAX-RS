@@ -1,6 +1,13 @@
 package com.rayan.salarytracker.core.exception;
 
-public class GenericException extends Exception{
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@NoArgsConstructor
+public class GenericException extends Exception {
     private String code;
 
     public GenericException(String code, String message) {

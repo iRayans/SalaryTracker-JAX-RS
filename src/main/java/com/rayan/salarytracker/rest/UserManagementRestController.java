@@ -28,7 +28,7 @@ public class UserManagementRestController {
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("userId") Long id) {
+    public Response getUser(@PathParam("userId") Long id) throws EntityNotFoundException {
         UserReadOnlyDTO userReadOnlyDTO = userService.getUserById(id);
         return Response.status(Response.Status.OK).entity(userReadOnlyDTO).build();
     }

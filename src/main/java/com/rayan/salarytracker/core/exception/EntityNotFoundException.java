@@ -1,10 +1,10 @@
 package com.rayan.salarytracker.core.exception;
 
-public class EntityNotFoundException extends RuntimeException {
-    private static final long serialVersionUID = 1L; 
+public class EntityNotFoundException extends GenericException {
+    private static final String DEFAULT_CODE = "NotFound";
 
-    public EntityNotFoundException(String message) {
-        super(message);
+    public EntityNotFoundException(String code, String message) {
+        super(code + DEFAULT_CODE, message);
     }
-    
+
 }

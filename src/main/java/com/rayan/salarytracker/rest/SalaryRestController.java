@@ -1,6 +1,7 @@
 package com.rayan.salarytracker.rest;
 
 import com.rayan.salarytracker.core.exception.AppServerException;
+import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
 import com.rayan.salarytracker.model.Salary;
@@ -36,7 +37,7 @@ public class SalaryRestController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSalaries() {
+    public Response getUserSalaries() throws EntityNotFoundException {
         // Fetch salaries list based on logged-in user.
         Long userId = getLoggedinUser().getId();
         List<SalaryReadOnlyDTO> salaries = salaryService.getAllUserSalaries(userId);
@@ -60,7 +61,7 @@ public class SalaryRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response updateSalary(@PathParam("id") Long salaryId, Salary salary) throws AppServerException {
+    public Response updateSalary(@PathParam("id") Long salaryId, Salary salary) throws AppServerException, EntityNotFoundException {
         User user = getLoggedinUser();
         salary.setUser(user);
 
@@ -72,7 +73,7 @@ public class SalaryRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response deleteSalary(@PathParam("id") Long salaryId) throws AppServerException {
+    public Response deleteSalary(@PathParam("id") Long salaryId) throws AppServerException, EntityNotFoundException {
         User user = getLoggedinUser();
 
         salaryService.deleteSalary(salaryId, user.getId());

@@ -3,7 +3,9 @@ package com.rayan.salarytracker.rest;
 import com.rayan.salarytracker.authentication.AuthenticationProvider;
 import com.rayan.salarytracker.authentication.AuthenticationResponseDTO;
 import com.rayan.salarytracker.core.exception.AppServerException;
+import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
 import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
+import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.core.util.validation.ValidatorUtil;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
@@ -50,7 +52,7 @@ public class AuthenticationRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(UserInsertDTO userInsertDTO)
-            throws AppServerException, EntityInvalidArgumentsException {
+            throws AppServerException, EntityInvalidArgumentsException, EntityAlreadyExistsException {
         // Validation
         ValidatorUtil.validateDTO(userInsertDTO);
 
@@ -64,14 +66,15 @@ public class AuthenticationRestController {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginUser(UserLoginDTO userLoginDTO, @Context Principal principal) {
+    public Response loginUser(UserLoginDTO userLoginDTO, @Context Principal principal) throws EntityNotFoundException, EntityInvalidArgumentsException {
         System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword());
 
         // Authentication
         boolean isAuthenticated = authenticationProvider.authenticate(userLoginDTO);
         if (!isAuthenticated) {
             LOGGER.error("email or password incorrect");
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            throw new EntityInvalidArgumentsException("User", "email or password incorrect");
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         // Commented out for now...

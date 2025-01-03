@@ -2,7 +2,7 @@ package com.rayan.salarytracker.core.util.validation;
 
 
 import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
-import com.rayan.salarytracker.core.exception.PasswordsDoNotMatchException;
+import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.dao.IUserDAO;
 import com.rayan.salarytracker.dao.UserDAO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
@@ -22,15 +22,12 @@ public class ValidatorUtil {
     private static final IUserService userService = new UserService(userDAO, mapper);
 
 
-    public static void validateDTO(UserInsertDTO userInsertDTO) {
+    public static void validateDTO(UserInsertDTO userInsertDTO) throws EntityAlreadyExistsException, EntityInvalidArgumentsException {
         // Logical Validation
         if (userService.isEmailExists(userInsertDTO.getEmail())) {
-            throw new EntityAlreadyExistsException(
-                    "User with Email: " + userInsertDTO.getEmail() + " is Already exist");
+            throw new EntityAlreadyExistsException("User ", "User with Email: " + userInsertDTO.getEmail() + " is Already exist");
         } else if (!userInsertDTO.getPassword().equals(userInsertDTO.getConfirmPassword())) {
-            throw new PasswordsDoNotMatchException(
-                    "Password do not match!");
+            throw new EntityInvalidArgumentsException("User ", "Password and confirm Password do not match!");
         }
-
     }
 }

@@ -57,8 +57,11 @@ public class SalaryService implements ISalaryService {
             // Fetch salaries and map to DTOs
             List<Salary> salaries = salaryDAO.findSalaryByUserId(userId);
             if (salaries.isEmpty()) {
-                throw new EntityNotFoundException("No salaries found for user ID: " + userId);
+                LOGGER.info("No salaries found for user ID: {}", userId);
+                JPAHelperUtil.commitTransaction();
+                return salaryReadOnlyDTOs;
             }
+
             salaryReadOnlyDTOs = salaries.stream()
                     .map(mapper::mapToSalaryReadOnlyDTO)
                     .toList();
@@ -67,10 +70,6 @@ public class SalaryService implements ISalaryService {
             LOGGER.info("Successfully retrieved salaries for user ID: {}", userId);
             return salaryReadOnlyDTOs;
 
-        } catch (EntityNotFoundException e) {
-            JPAHelperUtil.rollbackTransaction();
-            LOGGER.warn("No salaries found for user ID: {}", userId, e);
-            throw e;
         } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("An error occurred while retrieving salaries for user ID: {}", userId, e);
@@ -110,7 +109,7 @@ public class SalaryService implements ISalaryService {
         try {
             JPAHelperUtil.beginTransaction();
             Salary existingSalary = salaryDAO.getById(salaryId)
-                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salary.getId() + " not found."));
+                    .orElseThrow(() -> new EntityNotFoundException("Salary", "Salary with id: " + salary.getId() + " not found."));
 
             // Update only provided fields
             updateFields(existingSalary, salary);
@@ -140,7 +139,7 @@ public class SalaryService implements ISalaryService {
             // Fetch the salary and validate ownership
             Salary salary = salaryDAO.getById(salaryId)
                     .filter(s -> s.getUser().getId().equals(userId))
-                    .orElseThrow(() -> new EntityNotFoundException("Salary with id: " + salaryId + " not found or does not belong to user with id: " + userId));
+                    .orElseThrow(() -> new EntityNotFoundException("Salary", "Salary with id: " + salaryId + " not found or does not belong to user with id: " + userId));
 
             // Delete the salary
             salaryDAO.delete(salaryId);
@@ -150,11 +149,7 @@ public class SalaryService implements ISalaryService {
         } catch (EntityNotFoundException e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Failed to delete salary with id: {} by user with id: {}. Reason: {}", salaryId, userId, e.getMessage(), e);
-            throw e; // Rethrow exception to notify caller
-        } catch (Exception e) {
-            JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Unexpected error while deleting salary with id: {} by user with id: {}.", salaryId, userId, e);
-            throw new RuntimeException("An unexpected error occurred during deletion.", e);
+            throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();
         }

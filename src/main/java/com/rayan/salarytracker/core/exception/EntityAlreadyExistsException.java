@@ -1,9 +1,10 @@
 package com.rayan.salarytracker.core.exception;
 
-public class EntityAlreadyExistsException extends RuntimeException{
-    private static final long serialVersionUID = 1L;
+public class EntityAlreadyExistsException extends GenericException {
 
-    public EntityAlreadyExistsException(String message){
-        super(message);
+    private static final String DEFAULT_CODE = "AlreadyExists";
+
+    public EntityAlreadyExistsException(String code, String message) {
+        super(code + DEFAULT_CODE, message);
     }
 }

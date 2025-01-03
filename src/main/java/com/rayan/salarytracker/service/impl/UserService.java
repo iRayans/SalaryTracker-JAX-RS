@@ -36,22 +36,20 @@ public class UserService implements IUserService {
 
     @Override
     public UserReadOnlyDTO insertUser(UserInsertDTO userInsertDTO) throws AppServerException {
-
         try {
             JPAHelperUtil.beginTransaction();
             User user = mapper.mapToUser(userInsertDTO);
 
             UserReadOnlyDTO userReadOnlyDTO = userDAO.insert(user)
                     .map(mapper::mapToUserReadOnlyDTO)
-                    .orElseThrow(() -> new AppServerException("User",
-                            "User with email: " + userInsertDTO.getEmail() + "not inserted."));
+                    .orElseThrow(() -> new AppServerException("User ", "User with email: " + userInsertDTO.getEmail() + "not inserted."));
             JPAHelperUtil.commitTransaction();
 
-            LOGGER.info("User with username {} inserted.", userInsertDTO.getUsername());
+            LOGGER.info("User with Email {} inserted.", userInsertDTO.getEmail());
             return userReadOnlyDTO;
         } catch (AppServerException e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("User with username: {} not inserted.", userInsertDTO.getUsername());
+            LOGGER.error("User with Email: {} not inserted.", userInsertDTO.getEmail());
             throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();
@@ -63,7 +61,7 @@ public class UserService implements IUserService {
         try {
             JPAHelperUtil.beginTransaction();
             userDAO.getById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " Not found."));
+                    .orElseThrow(() -> new EntityNotFoundException("User", " with id: " + id + " Not found."));
             userDAO.delete(id);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("User with id: {} was deleted.", id);
@@ -83,7 +81,7 @@ public class UserService implements IUserService {
             JPAHelperUtil.beginTransaction();
             UserReadOnlyDTO userReadOnlyDTO = userDAO.getById(id)
                     .map(mapper::mapToUserReadOnlyDTO)
-                    .orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " not found."));
+                    .orElseThrow(() -> new EntityNotFoundException("User", "User with id " + id + " was not found."));
             JPAHelperUtil.commitTransaction();
             LOGGER.info("User with id {} was found.", id);
 
@@ -111,7 +109,7 @@ public class UserService implements IUserService {
             JPAHelperUtil.beginTransaction();
             UserReadOnlyDTO userReadOnlyDTO = userDAO.findUserByUserEmail(email)
                     .map(mapper::mapToUserReadOnlyDTO)
-                    .orElseThrow(() -> new EntityNotFoundException("User with email " + email + " not found."));
+                    .orElseThrow(() -> new EntityNotFoundException("User", " with email " + email + " was not found."));
             JPAHelperUtil.commitTransaction();
             return userReadOnlyDTO;
         } catch (EntityNotFoundException e) {
