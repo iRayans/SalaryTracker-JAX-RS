@@ -52,7 +52,7 @@ public class Mapper {
                 null,
                 expenseInsertDTO.getDescription(),
                 expenseInsertDTO.getAmount(),
-                BudgetRuleAllocation.valueOf(expenseInsertDTO.getBudgetRole()),
+                BudgetRuleAllocation.valueOf(expenseInsertDTO.getBudgetRuleAllocation()),
                 expenseInsertDTO.getBank(),
                 expenseInsertDTO.isStatus(),
                 null,
@@ -61,7 +61,7 @@ public class Mapper {
         );
     }
 
-    ExpenseReadOnlyDTO mapToExpenseReadOnlyDTO(Expense expense) {
+    public ExpenseReadOnlyDTO mapToExpenseReadOnlyDTO(Expense expense) {
         return new ExpenseReadOnlyDTO(
                 expense.getId(),
                 expense.getDescription(),
