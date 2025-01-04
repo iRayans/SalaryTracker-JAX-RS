@@ -2,6 +2,7 @@ package com.rayan.salarytracker.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rayan.salarytracker.core.enums.BudgetRuleAllocation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,18 +20,21 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "expenses")
-public class Expense {
+public class Expense implements IdentifiableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @NotBlank(message = "Description must not be empty")
     @Column(name = "description")
     private String description;
     @Column(name = "amount")
     private int amount;
-    @Column(name = "category")
-    private String category;
+    // Not needed for now
+//    @Column(name = "category")
+//    private String category;
+    @Enumerated(EnumType.STRING)
+    private BudgetRuleAllocation budgetRuleAllocation;
     @Column(name = "bank")
     private String bank;
     @Column(name = "status")
