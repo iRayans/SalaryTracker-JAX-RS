@@ -21,7 +21,7 @@ public class ExpenseInsertDTO {
     private int amount;
 
     @NotEmpty(message = "Budget Role must not be empty")
-    private String budgetRole;
+    private String budgetRuleAllocation;
     private String bank;
     private boolean status;
     private Salary salary;
