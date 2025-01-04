@@ -11,6 +11,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path("/expenses")
 @ApplicationScoped
 public class ExpenseRestController {
@@ -32,5 +34,14 @@ public class ExpenseRestController {
     public Response insertExpense(@PathParam("id") Long salaryId, ExpenseInsertDTO expenseInsertDTO) throws AppServerException, EntityNotFoundException {
         ExpenseReadOnlyDTO expenseReadOnlyDTO = expenseService.insertExpense(salaryId, expenseInsertDTO);
         return Response.status(Response.Status.CREATED).entity(expenseReadOnlyDTO).build();
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response getAllExpenses(@PathParam("id") Long salaryId) {
+        List<ExpenseReadOnlyDTO> expenseReadOnlyDTOList = expenseService.getAllExpenses(salaryId);
+        return Response.status(Response.Status.OK).entity(expenseReadOnlyDTOList).build();
     }
 }
