@@ -8,7 +8,7 @@ import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
 import java.util.List;
 
 public interface IExpenseService {
-    List<ExpenseReadOnlyDTO> getAllExpenses();
+    List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId);
 
     ExpenseReadOnlyDTO insertExpense(Long salaryId, ExpenseInsertDTO expenseInsertDTO) throws AppServerException, EntityNotFoundException;
 }

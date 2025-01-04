@@ -33,9 +33,11 @@ public class ExpenseService implements IExpenseService {
         this.salaryDAO = salaryDAO;
     }
 
-    @Override
-    public List<ExpenseReadOnlyDTO> getAllExpenses() {
-        return List.of();
+    public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId) {
+        JPAHelperUtil.beginTransaction();
+        List<Expense> expenses = expenseDAO.getExpensesBySalaryId(salaryId);
+        JPAHelperUtil.commitTransaction();
+        return expenses.stream().map(mapper::mapToExpenseReadOnlyDTO).toList();
     }
 
     public ExpenseService() {
@@ -66,5 +68,6 @@ public class ExpenseService implements IExpenseService {
         }
 
     }
+
 
 }
