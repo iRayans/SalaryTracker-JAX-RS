@@ -1,10 +1,14 @@
 package com.rayan.salarytracker.mapper;
 
+import com.rayan.salarytracker.core.enums.BudgetRuleAllocation;
 import com.rayan.salarytracker.core.enums.RoleType;
+import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
+import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
+import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.model.Salary;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.PasswordUtil;
@@ -38,4 +42,36 @@ public class Mapper {
     public SalaryReadOnlyDTO mapToSalaryReadOnlyDTO(Salary salary) {
         return new SalaryReadOnlyDTO(salary.getId(), salary.getMonth(), salary.getDescription(), salary.getAmount(), salary.getCreatedAt(), salary.getUpdatedAt());
     }
+
+
+    // ======================================
+    // =          Expense Mapper            =
+    // ======================================
+    public Expense mapToExpense(ExpenseInsertDTO expenseInsertDTO) {
+        return new Expense(
+                null,
+                expenseInsertDTO.getDescription(),
+                expenseInsertDTO.getAmount(),
+                BudgetRuleAllocation.valueOf(expenseInsertDTO.getBudgetRole()),
+                expenseInsertDTO.getBank(),
+                expenseInsertDTO.isStatus(),
+                null,
+                null,
+                expenseInsertDTO.getSalary()
+        );
+    }
+
+    ExpenseReadOnlyDTO mapToExpenseReadOnlyDTO(Expense expense) {
+        return new ExpenseReadOnlyDTO(
+                expense.getId(),
+                expense.getDescription(),
+                expense.getAmount(),
+                expense.getBudgetRuleAllocation().name(),
+                expense.isStatus(),
+                expense.getBank(),
+                expense.getCreatedAt(),
+                expense.getUpdatedAt()
+        );
+    }
+
 }
