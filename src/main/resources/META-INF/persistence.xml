@@ -16,7 +16,7 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="Password1"/>
             <property name="jakarta.persistence.schema-generation.database.action"
-                      value="create"/>   <!-- drop-and-create -->
+                      value="update"/>   <!-- drop-and-create -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>

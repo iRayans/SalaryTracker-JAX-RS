@@ -22,9 +22,9 @@ import java.util.List;
 @ApplicationScoped
 public class SalaryRestController {
     @Context
-    SecurityContext securityContext;
+    private SecurityContext securityContext;
 
-    SalaryService salaryService;
+    private SalaryService salaryService;
 
     @Inject
     public SalaryRestController(SalaryService salaryService) {
