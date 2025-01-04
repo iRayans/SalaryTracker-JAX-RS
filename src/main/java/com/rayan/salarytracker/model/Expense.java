@@ -1,13 +1,10 @@
 package com.rayan.salarytracker.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rayan.salarytracker.core.enums.BudgetRuleAllocation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,9 +12,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "expenses")
 public class Expense implements IdentifiableEntity {
@@ -55,7 +54,5 @@ public class Expense implements IdentifiableEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "salary_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    // When delete a salary all expenses belong to that salary will be deleted.
-    @JsonIgnore
     private Salary salary;
 }

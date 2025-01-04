@@ -14,8 +14,9 @@ import java.sql.Timestamp;
 public class ExpenseReadOnlyDTO {
     private Long id;
     private String description;
-    private String amount;
+    private int amount;
     private String budgetRule;
+    private boolean status;
     private String bank;
     private Timestamp createdAt;
     private Timestamp updatedAt;

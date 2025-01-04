@@ -1,5 +1,6 @@
 package com.rayan.salarytracker.dto.expense;
 
+import com.rayan.salarytracker.model.Salary;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -21,7 +22,7 @@ public class ExpenseInsertDTO {
 
     @NotEmpty(message = "Budget Role must not be empty")
     private String budgetRole;
-
     private String bank;
     private boolean status;
+    private Salary salary;
 }
