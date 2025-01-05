@@ -37,7 +37,7 @@ public class Expense implements IdentifiableEntity {
     @Column(name = "bank")
     private String bank;
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;

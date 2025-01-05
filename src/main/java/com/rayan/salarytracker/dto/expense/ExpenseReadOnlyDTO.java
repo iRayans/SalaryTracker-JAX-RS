@@ -16,7 +16,7 @@ public class ExpenseReadOnlyDTO {
     private String description;
     private int amount;
     private String budgetRule;
-    private boolean status;
+    private Boolean status;
     private String bank;
     private Timestamp createdAt;
     private Timestamp updatedAt;
