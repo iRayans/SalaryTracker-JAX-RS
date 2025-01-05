@@ -4,6 +4,7 @@ import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
+import com.rayan.salarytracker.model.Expense;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface IExpenseService {
     List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId);
 
     ExpenseReadOnlyDTO insertExpense(Long salaryId, ExpenseInsertDTO expenseInsertDTO) throws AppServerException, EntityNotFoundException;
+
+    ExpenseReadOnlyDTO updateExpense(Long expenseId, Expense expense) throws AppServerException, EntityNotFoundException;
 }

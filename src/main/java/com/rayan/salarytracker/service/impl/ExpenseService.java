@@ -69,5 +69,36 @@ public class ExpenseService implements IExpenseService {
 
     }
 
+    @Override
+    public ExpenseReadOnlyDTO updateExpense(Long expenseId, Expense expense) throws AppServerException, EntityNotFoundException {
+        try {
+            JPAHelperUtil.beginTransaction();
+            Expense existingExpense = expenseDAO.getById(expenseId)
+                    .orElseThrow(() -> new EntityNotFoundException("Expense", "Expense: " + expenseId + " not found."));
+            // Update only provided fields
+            updateFields(existingExpense, expense);
+            ExpenseReadOnlyDTO expenseReadOnlyDTO = expenseDAO.update(existingExpense)
+                    .map(mapper::mapToExpenseReadOnlyDTO)
+                    .orElseThrow(() -> new AppServerException("Expense", "Expense: " + expenseId + " not updates."));
+            JPAHelperUtil.commitTransaction();
+            LOGGER.info("Expense with Id:  {} updated.", expenseReadOnlyDTO.getId());
+            return expenseReadOnlyDTO;
+        } catch (AppServerException e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("Expense: {} was not updated ", expenseId, e);
+            throw e;
+        } finally {
+            JPAHelperUtil.closeEntityManager();
+        }
+    }
+
+
+    private void updateFields(Expense existing, Expense updated) {
+        existing.setAmount(updated.getAmount() > 0 ? updated.getAmount() : existing.getAmount());
+        existing.setDescription(updated.getDescription() != null ? updated.getDescription() : existing.getDescription());
+        existing.setBank(updated.getBank() != null ? updated.getBank() : existing.getBank());
+        existing.setStatus(updated.getStatus() != null ? updated.getStatus() : existing.getStatus());
+        existing.setBudgetRuleAllocation(updated.getBudgetRuleAllocation() != null ? updated.getBudgetRuleAllocation() : existing.getBudgetRuleAllocation());
+    }
 
 }
