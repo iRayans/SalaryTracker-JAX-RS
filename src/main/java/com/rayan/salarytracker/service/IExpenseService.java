@@ -14,4 +14,6 @@ public interface IExpenseService {
     ExpenseReadOnlyDTO insertExpense(Long salaryId, ExpenseInsertDTO expenseInsertDTO) throws AppServerException, EntityNotFoundException;
 
     ExpenseReadOnlyDTO updateExpense(Long expenseId, Expense expense) throws AppServerException, EntityNotFoundException;
+
+    void deleteExpense(Long expenseId) throws AppServerException, EntityNotFoundException;
 }

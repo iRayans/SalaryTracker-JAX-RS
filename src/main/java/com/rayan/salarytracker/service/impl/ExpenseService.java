@@ -92,6 +92,25 @@ public class ExpenseService implements IExpenseService {
         }
     }
 
+    @Override
+    public void deleteExpense(Long expenseId) throws AppServerException, EntityNotFoundException {
+        try {
+            JPAHelperUtil.beginTransaction();
+            expenseDAO.getById(expenseId)
+                    .orElseThrow(() -> new EntityNotFoundException("Expense", "Expense: " + expenseId + " not found."));
+
+            expenseDAO.delete(expenseId);
+            JPAHelperUtil.commitTransaction();
+            LOGGER.info("Expense with Id:  {} deleted.", expenseId);
+        } catch (EntityNotFoundException e) {
+            JPAHelperUtil.rollbackTransaction();
+            LOGGER.error("Expense: {} was not deleted ", expenseId, e);
+            throw e;
+        } finally {
+            JPAHelperUtil.closeEntityManager();
+        }
+    }
+
 
     private void updateFields(Expense existing, Expense updated) {
         existing.setAmount(updated.getAmount() > 0 ? updated.getAmount() : existing.getAmount());

@@ -54,4 +54,13 @@ public class ExpenseRestController {
         ExpenseReadOnlyDTO expenseReadOnlyDTO = expenseService.updateExpense(expenseId, expense);
         return Response.status(Response.Status.OK).entity(expenseReadOnlyDTO).build();
     }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public Response deleteExpense(@PathParam("id") Long expenseId) throws AppServerException, EntityNotFoundException {
+        expenseService.deleteExpense(expenseId);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
 }
