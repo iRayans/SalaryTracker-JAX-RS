@@ -1,11 +1,10 @@
 package com.rayan.salarytracker.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
@@ -15,6 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
+@Table(name = "summary")
 public class Summary implements IdentifiableEntity {
 
     @Id
@@ -30,4 +30,16 @@ public class Summary implements IdentifiableEntity {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Timestamp updatedAt;
+
+
+    ///////////////////////////////
+    // Relations start from here //
+    /// ////////////////////////////
+
+    // Many Expenses mapped to a single Salary.
+    // The fetch Type set to lazy since we don't need to fetch user object with the response.
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "salary_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Salary salary;
 }
