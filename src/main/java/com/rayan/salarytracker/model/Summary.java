@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "summary")
 public class Summary implements IdentifiableEntity {
 
@@ -36,7 +37,7 @@ public class Summary implements IdentifiableEntity {
     // Relations start from here //
     /// ////////////////////////////
 
-    // Many Expenses mapped to a single Salary.
+    // Many Summaries mapped to a single Salary.
     // The fetch Type set to lazy since we don't need to fetch user object with the response.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "salary_id", nullable = false)
