@@ -6,10 +6,13 @@ import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
+import com.rayan.salarytracker.dto.summary.SummaryInsertDTO;
+import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.model.Salary;
+import com.rayan.salarytracker.model.Summary;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.PasswordUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -72,6 +75,18 @@ public class Mapper {
                 expense.getCreatedAt(),
                 expense.getUpdatedAt()
         );
+    }
+
+    // ======================================
+    // =          Summary Mapper            =
+    // ======================================
+
+    public Summary mapToSummary(SummaryInsertDTO summaryInsertDTO) {
+        return new Summary(null, summaryInsertDTO.getTotalExpense(), summaryInsertDTO.getRemainingSalary(), null, null, summaryInsertDTO.getSalary());
+    }
+
+    public SummaryReadOnlyDTO mapToSummaryReadOnlyDTO(Summary summary) {
+        return new SummaryReadOnlyDTO(summary.getId(), summary.getTotalExpense(), summary.getRemainingSalary(), summary.getSalary(), summary.getUpdatedAt(), summary.getCreatedAt());
     }
 
 }
