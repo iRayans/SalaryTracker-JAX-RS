@@ -24,11 +24,13 @@ public class SalaryService implements ISalaryService {
 
 
     private ISalaryDAO salaryDAO;
+    private SummaryService summaryService;
     private Mapper mapper;
 
     @Inject
-    public SalaryService(ISalaryDAO salaryDAO, Mapper mapper) {
+    public SalaryService(ISalaryDAO salaryDAO, SummaryService summaryService, Mapper mapper) {
         this.salaryDAO = salaryDAO;
+        this.summaryService = summaryService;
         this.mapper = mapper;
     }
 
@@ -81,7 +83,7 @@ public class SalaryService implements ISalaryService {
 
 
     @Override
-    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException {
+    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException {
         try {
             JPAHelperUtil.beginTransaction();
             Salary salary = mapper.mapToSalary(salaryInsertDTO);
@@ -90,11 +92,13 @@ public class SalaryService implements ISalaryService {
                     .map(mapper::mapToSalaryReadOnlyDTO)
                     .orElseThrow(() -> new AppServerException("Salary",
                             "Salary with Month: " + salaryInsertDTO.getMonth() + "not inserted."));
+            // Initialize Summary for this month.
+            summaryService.insertSummary(salary);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("Salary with month: {} inserted.", salaryInsertDTO.getMonth());
             return salaryReadOnlyDTO;
 
-        } catch (AppServerException e) {
+        } catch (AppServerException | EntityNotFoundException e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Salary with month: {} not inserted.", salaryInsertDTO.getMonth());
             throw e;

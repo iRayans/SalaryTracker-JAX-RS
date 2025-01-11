@@ -12,7 +12,7 @@ public interface ISalaryService {
 
     List<SalaryReadOnlyDTO> getAllSalaries();
 
-    SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException;
+    SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException;
 
     SalaryReadOnlyDTO updateSalary(Long salaryId, Salary Salary) throws AppServerException, EntityNotFoundException;
 

@@ -48,7 +48,7 @@ public class SalaryRestController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException {
+    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException {
         User user = getLoggedinUser();
         salaryInsertDTO.setUser(user);
 
