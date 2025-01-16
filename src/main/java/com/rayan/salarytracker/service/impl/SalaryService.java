@@ -93,7 +93,7 @@ public class SalaryService implements ISalaryService {
                     .orElseThrow(() -> new AppServerException("Salary",
                             "Salary with Month: " + salaryInsertDTO.getMonth() + "not inserted."));
             // Initialize Summary for this month.
-            summaryService.insertSummary(salary);
+            summaryService.initializeSummary(salary);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("Salary with month: {} inserted.", salaryInsertDTO.getMonth());
             return salaryReadOnlyDTO;
