@@ -4,6 +4,7 @@ import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
+import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
 import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.service.impl.ExpenseService;
 import com.rayan.salarytracker.service.impl.SummaryService;
@@ -73,8 +74,8 @@ public class ExpenseRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/summary")
-    public Response getSalarySummary(@PathParam("id") Long salaryId) {
-        List<ExpenseReadOnlyDTO> expenseReadOnlyDTOList = expenseService.getAllExpenses(salaryId);
-        return Response.status(Response.Status.OK).entity(expenseReadOnlyDTOList).build();
+    public Response getSalarySummary(@PathParam("id") Long salaryId) throws EntityNotFoundException {
+        SummaryReadOnlyDTO summaryReadOnlyDTOS = summaryService.getSummary(salaryId);
+        return Response.status(Response.Status.OK).entity(summaryReadOnlyDTOS).build();
     }
 }

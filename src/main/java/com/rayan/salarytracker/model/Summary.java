@@ -38,8 +38,7 @@ public class Summary implements IdentifiableEntity {
     /// ////////////////////////////
 
     // Many Summaries mapped to a single Salary.
-    // The fetch Type set to lazy since we don't need to fetch user object with the response.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "salary_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Salary salary;
