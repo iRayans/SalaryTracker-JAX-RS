@@ -51,7 +51,6 @@ public class SalaryRestController {
     public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException {
         User user = getLoggedinUser();
         salaryInsertDTO.setUser(user);
-
         SalaryReadOnlyDTO salary = salaryService.insertSalary(salaryInsertDTO);
         return Response.status(Response.Status.CREATED).entity(salary).build();
     }

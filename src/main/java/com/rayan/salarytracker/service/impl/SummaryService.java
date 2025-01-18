@@ -49,8 +49,12 @@ public class SummaryService implements ISummaryService {
         }
     }
 
-    /*
-     * This method responsible for initialize Summary for  Salary
+    /**
+     * Initializes a new {@link Summary} for the given {@link Salary}.
+     * Sets the remaining salary to the total salary amount and persists the summary.
+     *
+     * @param salary the {@link Salary} entity for which the summary is initialized.
+     * @throws EntityNotFoundException if the summary cannot be saved.
      */
     @Override
     public void initializeSummary(Salary salary) throws EntityNotFoundException {
@@ -62,10 +66,18 @@ public class SummaryService implements ISummaryService {
         LOGGER.info("Summary for month: {} initialized successfully.", salary.getMonth());
     }
 
+    /**
+     * Updates the {@link Summary} for the given salary by adding or deleting an expense.
+     *
+     * @param expenseAmount the expense amount to adjust.
+     * @param salaryId      the ID of the salary to update.
+     * @param action        the {@link ExpenseAction} (ADD or DELETE).
+     * @throws AppServerException if the update fails.
+     */
     @Override
     public void updateSummary(int expenseAmount, Long salaryId, ExpenseAction action) throws AppServerException {
         try {
-            LOGGER.info("Updating summary for salaryId: {}", salaryId);
+            LOGGER.info("{} expense for salaryId: {}", action, salaryId);
             boolean updated = summaryDAO.updateSummary(expenseAmount, salaryId, action);
             if (updated) {
                 LOGGER.info("Summary updated successfully for salaryId: {}", salaryId);
@@ -75,7 +87,6 @@ public class SummaryService implements ISummaryService {
         } catch (Exception e) {
             LOGGER.error("Error while updating summary for salaryId: {}", salaryId, e);
             throw new RuntimeException(e);
-        } finally {
         }
     }
 }
