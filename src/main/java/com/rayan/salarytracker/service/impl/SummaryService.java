@@ -2,6 +2,7 @@ package com.rayan.salarytracker.service.impl;
 
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
+import com.rayan.salarytracker.dao.ISummaryDAO;
 import com.rayan.salarytracker.dao.SummaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class SummaryService {
     private static final Logger LOGGER = LogManager.getLogger(SummaryService.class.getName());
 
-    private SummaryDAO summaryDAO;
+    private ISummaryDAO summaryDAO;
     private Mapper mapper;
 
     public SummaryService() {
@@ -58,7 +59,7 @@ public class SummaryService {
         try {
             LOGGER.info("Updating summary for salaryId: {}", salaryId);
             JPAHelperUtil.beginTransaction();
-            boolean updated = summaryDAO.calcSummary(expenseAmount, salaryId);
+            boolean updated = summaryDAO.updateSummary(expenseAmount, salaryId);
             if (updated) {
                 LOGGER.info("Summary updated successfully for salaryId: {}", salaryId);
             } else {

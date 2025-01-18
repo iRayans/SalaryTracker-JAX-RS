@@ -36,7 +36,7 @@ public class SummaryDAO extends GenericCRUDImpl<Summary> implements ISummaryDAO 
         }
     }
 
-    public boolean calcSummary(int expenseAmount, Long salaryId) {
+    public boolean updateSummary(int expenseAmount, Long salaryId) {
         String jpql = "UPDATE Summary s " +
                 "SET s.totalExpense = s.totalExpense + :expenseAmount, " +
                 "    s.remainingSalary = s.remainingSalary - :expenseAmount " +

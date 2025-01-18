@@ -8,5 +8,5 @@ public interface ISummaryDAO extends IGenericCRUD<Summary> {
 
     Optional<Summary> getSummaryBySalaryId(Long salaryId);
 
-    boolean calcSummary(int expenseAmount, Long salaryId);
+    boolean updateSummary(int expenseAmount, Long salaryId);
 }
