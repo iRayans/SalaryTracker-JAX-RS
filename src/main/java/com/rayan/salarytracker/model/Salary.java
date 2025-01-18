@@ -1,6 +1,5 @@
 package com.rayan.salarytracker.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,7 +44,6 @@ public class Salary implements IdentifiableEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE) // When delete a user all salaries belong to that user will be deleted.
-    @JsonIgnore
     private User user;
 
 }
