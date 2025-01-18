@@ -86,7 +86,13 @@ public class Mapper {
     }
 
     public SummaryReadOnlyDTO mapToSummaryReadOnlyDTO(Summary summary) {
-        return new SummaryReadOnlyDTO(summary.getId(), summary.getTotalExpense(), summary.getRemainingSalary(), summary.getSalary(), summary.getUpdatedAt(), summary.getCreatedAt());
+        return new SummaryReadOnlyDTO(summary.getId(),
+                summary.getTotalExpense(),
+                summary.getRemainingSalary(),
+                summary.getSalary().getMonth(),
+                summary.getSalary().getAmount(),
+                summary.getUpdatedAt(),
+                summary.getCreatedAt());
     }
 
 }
