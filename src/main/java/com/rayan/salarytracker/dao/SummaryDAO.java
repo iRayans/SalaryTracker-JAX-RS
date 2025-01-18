@@ -1,5 +1,6 @@
 package com.rayan.salarytracker.dao;
 
+import com.rayan.salarytracker.core.enums.ExpenseAction;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.model.Summary;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -36,11 +37,11 @@ public class SummaryDAO extends GenericCRUDImpl<Summary> implements ISummaryDAO 
         }
     }
 
-    public boolean updateSummary(int expenseAmount, Long salaryId) {
-        String jpql = "UPDATE Summary s " +
-                "SET s.totalExpense = s.totalExpense + :expenseAmount, " +
-                "    s.remainingSalary = s.remainingSalary - :expenseAmount " +
-                "WHERE s.salary.id = :salaryId";
+    @Override
+    public boolean updateSummary(int expenseAmount, Long salaryId, ExpenseAction action) {
+        String jpql = getJpql(action);
+        LOGGER.info("Updating summary for action: {} ", action);
+
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
             Query query = em.createQuery(jpql);
@@ -53,6 +54,25 @@ public class SummaryDAO extends GenericCRUDImpl<Summary> implements ISummaryDAO 
             LOGGER.error("Error in calcSummary for salaryId: {}", salaryId, e);
             throw e;
         }
+    }
+
+    private static String getJpql(ExpenseAction action) {
+        String jpql = null;
+
+        if (action == ExpenseAction.ADD) {
+            jpql = "UPDATE Summary s " +
+                    "SET s.totalExpense = s.totalExpense + :expenseAmount, " +
+                    "    s.remainingSalary = s.remainingSalary - :expenseAmount " +
+                    "WHERE s.salary.id = :salaryId";
+        } else if (action == ExpenseAction.DELETE) {
+            jpql = "UPDATE Summary s " +
+                    "SET s.totalExpense = s.totalExpense - :expenseAmount, " +
+                    "    s.remainingSalary = s.remainingSalary + :expenseAmount " +
+                    "WHERE s.salary.id = :salaryId";
+        } else {
+            throw new IllegalArgumentException("Invalid action: " + action);
+        }
+        return jpql;
     }
 
 

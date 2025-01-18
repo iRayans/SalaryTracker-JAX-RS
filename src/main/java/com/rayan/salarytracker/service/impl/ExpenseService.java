@@ -1,5 +1,6 @@
 package com.rayan.salarytracker.service.impl;
 
+import com.rayan.salarytracker.core.enums.ExpenseAction;
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dao.ExpenseDAO;
@@ -11,6 +12,7 @@ import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.model.Salary;
 import com.rayan.salarytracker.service.IExpenseService;
+import com.rayan.salarytracker.service.ISummaryService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
@@ -25,12 +27,14 @@ public class ExpenseService implements IExpenseService {
     private ExpenseDAO expenseDAO;
     private Mapper mapper;
     private SalaryDAO salaryDAO;
+    private ISummaryService summaryService;
 
     @Inject
-    public ExpenseService(ExpenseDAO expenseDAO, Mapper mapper, SalaryDAO salaryDAO) {
+    public ExpenseService(ExpenseDAO expenseDAO, Mapper mapper, SalaryDAO salaryDAO, ISummaryService summaryService) {
         this.expenseDAO = expenseDAO;
         this.mapper = mapper;
         this.salaryDAO = salaryDAO;
+        this.summaryService = summaryService;
     }
 
     public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId) {
@@ -50,6 +54,7 @@ public class ExpenseService implements IExpenseService {
             Salary salary = salaryDAO.getById(salaryId)
                     .orElseThrow(() -> new EntityNotFoundException("Salary", "Salary with id: " + salaryId + " not found."));
             Expense expense = mapper.mapToExpense(expenseInsertDTO);
+            summaryService.updateSummary(expenseInsertDTO.getAmount(), salaryId, ExpenseAction.ADD);
             expense.setSalary(salary);
             ExpenseReadOnlyDTO expenseReadOnlyDTO = expenseDAO.insert(expense)
                     .map(mapper::mapToExpenseReadOnlyDTO)
@@ -96,9 +101,9 @@ public class ExpenseService implements IExpenseService {
     public void deleteExpense(Long expenseId) throws AppServerException, EntityNotFoundException {
         try {
             JPAHelperUtil.beginTransaction();
-            expenseDAO.getById(expenseId)
+            Expense expense = expenseDAO.getById(expenseId)
                     .orElseThrow(() -> new EntityNotFoundException("Expense", "Expense: " + expenseId + " not found."));
-
+            summaryService.updateSummary(expense.getAmount(), expense.getSalary().getId(), ExpenseAction.DELETE);
             expenseDAO.delete(expenseId);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("Expense with Id:  {} deleted.", expenseId);

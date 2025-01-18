@@ -39,7 +39,6 @@ public class ExpenseRestController {
     public Response insertExpense(@PathParam("id") Long salaryId, ExpenseInsertDTO expenseInsertDTO) throws AppServerException, EntityNotFoundException {
         System.out.println("salaryId: " + salaryId);
         ExpenseReadOnlyDTO expenseReadOnlyDTO = expenseService.insertExpense(salaryId, expenseInsertDTO);
-        summaryService.updateSummary(expenseInsertDTO.getAmount(), salaryId);
         return Response.status(Response.Status.CREATED).entity(expenseReadOnlyDTO).build();
     }
 
