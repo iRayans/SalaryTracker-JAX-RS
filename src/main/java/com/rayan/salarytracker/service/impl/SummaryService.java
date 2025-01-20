@@ -41,7 +41,7 @@ public class SummaryService implements ISummaryService {
                     .orElseThrow(() -> new EntityNotFoundException("Summary", " with salary Id: " + salaryId + " was not found."));
             JPAHelperUtil.commitTransaction();
             return summaryReadOnlyDTO;
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.warn("Summary for salaryId: {} not found.", salaryId);
             throw e;
         } finally {
@@ -86,7 +86,7 @@ public class SummaryService implements ISummaryService {
             }
         } catch (Exception e) {
             LOGGER.error("Error while updating summary for salaryId: {}", salaryId, e);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }

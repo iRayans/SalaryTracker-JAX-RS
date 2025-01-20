@@ -64,7 +64,7 @@ public class ExpenseService implements IExpenseService {
             LOGGER.info("Expense with Id:  {} inserted.", expenseReadOnlyDTO.getId());
             return expenseReadOnlyDTO;
 
-        } catch (AppServerException | EntityNotFoundException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Expense: {} was not inserted ", expenseInsertDTO.getDescription());
             throw e;
@@ -88,7 +88,7 @@ public class ExpenseService implements IExpenseService {
             JPAHelperUtil.commitTransaction();
             LOGGER.info("Expense with Id:  {} updated.", expenseReadOnlyDTO.getId());
             return expenseReadOnlyDTO;
-        } catch (AppServerException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Expense: {} was not updated ", expenseId, e);
             throw e;
@@ -107,7 +107,7 @@ public class ExpenseService implements IExpenseService {
             expenseDAO.delete(expenseId);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("Expense with Id:  {} deleted.", expenseId);
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Expense: {} was not deleted ", expenseId, e);
             throw e;

@@ -47,7 +47,7 @@ public class UserService implements IUserService {
 
             LOGGER.info("User with Email {} inserted.", userInsertDTO.getEmail());
             return userReadOnlyDTO;
-        } catch (AppServerException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("User with Email: {} not inserted.", userInsertDTO.getEmail());
             throw e;
@@ -112,7 +112,7 @@ public class UserService implements IUserService {
                     .orElseThrow(() -> new EntityNotFoundException("User", " with email " + email + " was not found."));
             JPAHelperUtil.commitTransaction();
             return userReadOnlyDTO;
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             LOGGER.warn("User with email: {} not found.", email);
             throw e;
         } finally {

@@ -80,7 +80,7 @@ public class SalaryService implements ISalaryService {
         } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("An error occurred while retrieving salaries for user ID: {}", userId, e);
-            throw new RuntimeException("Error retrieving salaries for user ID: " + userId, e);
+            throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();
         }
@@ -144,7 +144,7 @@ public class SalaryService implements ISalaryService {
             LOGGER.info("Salary with id: {} updated.", existingSalary.getId());
             return salaryReadOnlyDTO;
 
-        } catch (AppServerException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Salary with id: {} not inserted.", salary.getMonth());
             throw e;
@@ -168,7 +168,7 @@ public class SalaryService implements ISalaryService {
             JPAHelperUtil.commitTransaction();
 
             LOGGER.info("Salary with id: {} deleted successfully by user with id: {}.", salaryId, userId);
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
             LOGGER.error("Failed to delete salary with id: {} by user with id: {}. Reason: {}", salaryId, userId, e.getMessage(), e);
             throw e;
