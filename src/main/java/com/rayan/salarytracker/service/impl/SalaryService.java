@@ -1,6 +1,8 @@
 package com.rayan.salarytracker.service.impl;
 
 import com.rayan.salarytracker.core.exception.AppServerException;
+import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
+import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dao.ISalaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
@@ -14,14 +16,17 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @ApplicationScoped
 public class SalaryService implements ISalaryService {
 
     private static final Logger LOGGER = LogManager.getLogger(SalaryService.class.getName());
-
+    private static final Set<String> VALID_MONTHS = new HashSet<>(Arrays.asList(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+    ));
 
     private ISalaryDAO salaryDAO;
     private SummaryService summaryService;
@@ -111,9 +116,9 @@ public class SalaryService implements ISalaryService {
             LOGGER.info("Salary with month: {} inserted.", salaryInsertDTO.getMonth());
             return salaryReadOnlyDTO;
 
-        } catch (AppServerException | EntityNotFoundException e) {
+        } catch (Exception e) {
             JPAHelperUtil.rollbackTransaction();
-            LOGGER.error("Salary with month: {} not inserted.", salaryInsertDTO.getMonth());
+            LOGGER.error("Failed to insert salary for month {}: {}", salaryInsertDTO.getMonth(), e.getMessage());
             throw e;
         } finally {
             JPAHelperUtil.closeEntityManager();
@@ -176,5 +181,9 @@ public class SalaryService implements ISalaryService {
         existing.setMonth(updated.getMonth() != null ? updated.getMonth() : existing.getMonth());
         existing.setAmount(updated.getAmount() != 0 ? updated.getAmount() : existing.getAmount());
         existing.setDescription(updated.getDescription() != null ? updated.getDescription() : existing.getDescription());
+    }
+
+    private boolean validateMonth(String month) {
+        return VALID_MONTHS.contains(month);
     }
 }
