@@ -83,15 +83,28 @@ public class SalaryService implements ISalaryService {
 
 
     @Override
-    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException {
+    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException {
+
         try {
             JPAHelperUtil.beginTransaction();
+            // set current year.
+            salaryInsertDTO.setYear(LocalDateTime.now().getYear());
             Salary salary = mapper.mapToSalary(salaryInsertDTO);
+
+            if (!validateMonth(salaryInsertDTO.getMonth())) {
+                throw new EntityInvalidArgumentsException("Salary", "Enter Valid Moth Only");
+            }
+
+            // Check if the month already exists
+            if (salaryDAO.existsByUserIdAndMonthAndYear(salaryInsertDTO.getUser().getId(), salaryInsertDTO.getMonth(), salaryInsertDTO.getYear())) {
+                LOGGER.warn("Salary for month {} already exists.", salaryInsertDTO.getMonth());
+                throw new EntityAlreadyExistsException("Salary", "Salary with month " + salaryInsertDTO.getMonth() + " already exists.");
+            }
 
             SalaryReadOnlyDTO salaryReadOnlyDTO = salaryDAO.insert(salary)
                     .map(mapper::mapToSalaryReadOnlyDTO)
                     .orElseThrow(() -> new AppServerException("Salary",
-                            "Salary with Month: " + salaryInsertDTO.getMonth() + "not inserted."));
+                            "Salary with Month: " + salaryInsertDTO.getMonth() + " not inserted."));
             // Initialize Summary for this month "Salary".
             summaryService.initializeSummary(salary);
             JPAHelperUtil.commitTransaction();

@@ -54,15 +54,15 @@ public class SummaryService implements ISummaryService {
      * Sets the remaining salary to the total salary amount and persists the summary.
      *
      * @param salary the {@link Salary} entity for which the summary is initialized.
-     * @throws EntityNotFoundException if the summary cannot be saved.
+     * @throws AppServerException if the summary cannot be saved.
      */
     @Override
-    public void initializeSummary(Salary salary) throws EntityNotFoundException {
+    public void initializeSummary(Salary salary) throws AppServerException {
         Summary summary = new Summary();
         summary.setSalary(salary);
         summary.setRemainingSalary(salary.getAmount());
         summaryDAO.insert(summary)
-                .orElseThrow(() -> new EntityNotFoundException("Summary", "Summary initialized failed."));
+                .orElseThrow(() -> new AppServerException("Summary", "Summary initialized failed."));
         LOGGER.info("Summary for month: {} initialized successfully.", salary.getMonth());
     }
 

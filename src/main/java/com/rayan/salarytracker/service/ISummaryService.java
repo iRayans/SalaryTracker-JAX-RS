@@ -10,7 +10,7 @@ public interface ISummaryService {
 
     SummaryReadOnlyDTO getSummary(Long salaryId) throws EntityNotFoundException;
 
-    void initializeSummary(Salary salary) throws EntityNotFoundException;
+    void initializeSummary(Salary salary) throws EntityNotFoundException, AppServerException;
 
     void updateSummary(int expenseAmount, Long salaryId, ExpenseAction action) throws AppServerException;
 }

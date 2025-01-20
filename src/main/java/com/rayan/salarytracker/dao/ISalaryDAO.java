@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ISalaryDAO extends IGenericCRUD<Salary> {
     List<Salary> findSalaryByUserId(Long userId);
+
+    boolean existsByUserIdAndMonthAndYear(Long userId, String month, int year);
 }

@@ -23,5 +23,6 @@ public class SalaryInsertDTO {
     @PositiveOrZero(message = "Value must be positive or zero")
     private int amount;
 
+    private int year;
     private User user;
 }

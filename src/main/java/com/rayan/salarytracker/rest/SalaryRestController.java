@@ -1,6 +1,8 @@
 package com.rayan.salarytracker.rest;
 
 import com.rayan.salarytracker.core.exception.AppServerException;
+import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
+import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
@@ -48,7 +50,7 @@ public class SalaryRestController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException {
+    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException {
         User user = getLoggedinUser();
         salaryInsertDTO.setUser(user);
         SalaryReadOnlyDTO salary = salaryService.insertSalary(salaryInsertDTO);

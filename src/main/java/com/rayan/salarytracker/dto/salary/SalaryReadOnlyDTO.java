@@ -18,6 +18,7 @@ public class SalaryReadOnlyDTO {
     private String month;
     private String description;
     private int amount;
+    private int year;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @Entity
-@Table(name = "salaries")
+@Table(name = "salaries", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "month", "year"})})
 public class Salary implements IdentifiableEntity {
 
     @Id
@@ -24,6 +24,8 @@ public class Salary implements IdentifiableEntity {
     private Long id;
     @Column(name = "month")
     private String month;
+    @Column(name = "year", nullable = false)
+    private int year;
     @Column(name = "description")
     private String description;
     @Column(name = "amount")
