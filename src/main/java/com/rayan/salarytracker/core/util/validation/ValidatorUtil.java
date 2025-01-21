@@ -4,7 +4,7 @@ package com.rayan.salarytracker.core.util.validation;
 import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
 import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.dao.IUserDAO;
-import com.rayan.salarytracker.dao.UserDAO;
+import com.rayan.salarytracker.dao.impl.UserDAO;
 import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.service.IUserService;

@@ -1,5 +1,6 @@
-package com.rayan.salarytracker.dao;
+package com.rayan.salarytracker.dao.impl;
 
+import com.rayan.salarytracker.dao.ISalaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.model.Salary;
 import jakarta.enterprise.context.ApplicationScoped;

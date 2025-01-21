@@ -1,15 +1,16 @@
-package com.rayan.salarytracker.dao;
+package com.rayan.salarytracker.dao.impl;
 
-import java.util.Optional;
-
+import com.rayan.salarytracker.dao.IUserDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.security.PasswordUtil;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+
+import java.util.Optional;
+
 @ApplicationScoped
 public class UserDAO extends GenericCRUDImpl<User> implements IUserDAO {
 
@@ -22,7 +23,7 @@ public class UserDAO extends GenericCRUDImpl<User> implements IUserDAO {
         String jpql = "SELECT e FROM User e WHERE e.email = :email";
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
-            TypedQuery<User> query = em.createQuery(jpql,User.class);
+            TypedQuery<User> query = em.createQuery(jpql, User.class);
             query.setParameter("email", email);
             User user = query.getSingleResult();
             return Optional.of(user);
@@ -36,11 +37,11 @@ public class UserDAO extends GenericCRUDImpl<User> implements IUserDAO {
         String jpql = "SELECT e FROM User e WHERE e.email = :email";
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
-            User user = em.createQuery(jpql,User.class)
-            .setParameter("email", email)
-            .getSingleResult();
+            User user = em.createQuery(jpql, User.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
             return PasswordUtil.checkPassword(plainPassword, user.getPassword());
-            
+
         } catch (NoResultException e) {
             return false;
         }
@@ -53,7 +54,7 @@ public class UserDAO extends GenericCRUDImpl<User> implements IUserDAO {
 
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
-            return em.createQuery(jpql,Boolean.class)
+            return em.createQuery(jpql, Boolean.class)
                     .setParameter("email", email)
                     .getSingleResult();
         } catch (NoResultException e) {

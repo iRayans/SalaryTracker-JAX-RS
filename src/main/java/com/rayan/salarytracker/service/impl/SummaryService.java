@@ -4,7 +4,7 @@ import com.rayan.salarytracker.core.enums.ExpenseAction;
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dao.ISummaryDAO;
-import com.rayan.salarytracker.dao.SummaryDAO;
+import com.rayan.salarytracker.dao.impl.SummaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
 import com.rayan.salarytracker.mapper.Mapper;

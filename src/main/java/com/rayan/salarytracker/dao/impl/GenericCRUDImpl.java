@@ -1,20 +1,17 @@
-package com.rayan.salarytracker.dao;
+package com.rayan.salarytracker.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.rayan.salarytracker.dao.IGenericCRUD;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.model.IdentifiableEntity;
-import jakarta.persistence.criteria.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.*;
 
 @Getter
 @Setter
