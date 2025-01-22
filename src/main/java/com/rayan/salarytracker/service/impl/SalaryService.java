@@ -4,7 +4,7 @@ import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
 import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
-import com.rayan.salarytracker.dao.ISalaryDAO;
+import com.rayan.salarytracker.dao.impl.SalaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
@@ -28,12 +28,12 @@ public class SalaryService implements ISalaryService {
             "July", "August", "September", "October", "November", "December"
     ));
 
-    private ISalaryDAO salaryDAO;
+    private SalaryDAO salaryDAO;
     private SummaryService summaryService;
     private Mapper mapper;
 
     @Inject
-    public SalaryService(ISalaryDAO salaryDAO, SummaryService summaryService, Mapper mapper) {
+    public SalaryService(SalaryDAO salaryDAO, SummaryService summaryService, Mapper mapper) {
         this.salaryDAO = salaryDAO;
         this.summaryService = summaryService;
         this.mapper = mapper;
