@@ -38,6 +38,9 @@ public class UserService implements IUserService {
     public UserReadOnlyDTO insertUser(UserInsertDTO userInsertDTO) throws AppServerException {
         try {
             JPAHelperUtil.beginTransaction();
+            if (userInsertDTO.getRole() == null) {
+                userInsertDTO.setRole("USER");
+            }
             User user = mapper.mapToUser(userInsertDTO);
 
             UserReadOnlyDTO userReadOnlyDTO = userDAO.insert(user)
