@@ -40,7 +40,7 @@
     <!--  Enabling CORS  -->
     <cors id="defaultCORSConfig"
           domain="/"
-          allowedOrigins="*"
+          allowedOrigins="http://localhost:3000"
           allowedMethods="GET, POST, PUT, DELETE, OPTIONS"
           allowedHeaders="Origin, Content-Type, Authorization, Cache-Control, Expires, Pragma"
           allowCredentials="true"
