@@ -90,7 +90,8 @@ public class AuthenticationRestController {
         String role = userReadOnlyDTO.getRole();
         // Create a JWT token for current user
         String token = jwtService.generateToken(userLoginDTO.getEmail(), username, role);
-        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token);
+        UserReadOnlyDTO user = userService.findUserByEmail(userLoginDTO.getEmail());
+        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(token, user);
 
         LOGGER.info("Logged in user {} ", userLoginDTO.getEmail());
         return Response.status(Response.Status.OK).entity(authenticationResponseDTO).build();
