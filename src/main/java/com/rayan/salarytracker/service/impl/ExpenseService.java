@@ -38,11 +38,20 @@ public class ExpenseService implements IExpenseService {
     }
 
     public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId) {
-        JPAHelperUtil.beginTransaction();
-        List<Expense> expenses = expenseDAO.getExpensesBySalaryId(salaryId);
-        JPAHelperUtil.commitTransaction();
-        return expenses.stream().map(mapper::mapToExpenseReadOnlyDTO).toList();
+        try {
+            JPAHelperUtil.beginTransaction();
+            List<Expense> expenses = expenseDAO.getExpensesBySalaryId(salaryId);
+            JPAHelperUtil.commitTransaction();
+            return expenses.stream().map(mapper::mapToExpenseReadOnlyDTO).toList();
+        } catch (Exception e) {
+            LOGGER.error("Error fetching expenses for salaryId {}: {}", salaryId, e.getMessage(), e);
+            JPAHelperUtil.rollbackTransaction();
+            throw e;
+        } finally {
+            JPAHelperUtil.closeEntityManager();
+        }
     }
+
 
     public ExpenseService() {
     }
