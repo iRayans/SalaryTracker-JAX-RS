@@ -3,8 +3,8 @@ package com.rayan.salarytracker.service.impl;
 import com.rayan.salarytracker.core.enums.ExpenseAction;
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
-import com.rayan.salarytracker.dao.impl.ExpenseDAO;
-import com.rayan.salarytracker.dao.impl.SalaryDAO;
+import com.rayan.salarytracker.dao.IExpenseDAO;
+import com.rayan.salarytracker.dao.ISalaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
@@ -24,13 +24,13 @@ import java.util.List;
 public class ExpenseService implements IExpenseService {
     private static final Logger LOGGER = LogManager.getLogger(ExpenseService.class.getName());
 
-    private ExpenseDAO expenseDAO;
+    private IExpenseDAO expenseDAO;
     private Mapper mapper;
-    private SalaryDAO salaryDAO;
+    private ISalaryDAO salaryDAO;
     private ISummaryService summaryService;
 
     @Inject
-    public ExpenseService(ExpenseDAO expenseDAO, Mapper mapper, SalaryDAO salaryDAO, ISummaryService summaryService) {
+    public ExpenseService(IExpenseDAO expenseDAO, Mapper mapper, ISalaryDAO salaryDAO, ISummaryService summaryService) {
         this.expenseDAO = expenseDAO;
         this.mapper = mapper;
         this.salaryDAO = salaryDAO;

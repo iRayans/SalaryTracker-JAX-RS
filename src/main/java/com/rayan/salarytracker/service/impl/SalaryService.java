@@ -4,13 +4,14 @@ import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityAlreadyExistsException;
 import com.rayan.salarytracker.core.exception.EntityInvalidArgumentsException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
-import com.rayan.salarytracker.dao.impl.SalaryDAO;
+import com.rayan.salarytracker.dao.ISalaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.salary.SalaryInsertDTO;
 import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
 import com.rayan.salarytracker.mapper.Mapper;
 import com.rayan.salarytracker.model.Salary;
 import com.rayan.salarytracker.service.ISalaryService;
+import com.rayan.salarytracker.service.ISummaryService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
@@ -28,12 +29,12 @@ public class SalaryService implements ISalaryService {
             "July", "August", "September", "October", "November", "December"
     ));
 
-    private SalaryDAO salaryDAO;
-    private SummaryService summaryService;
+    private ISalaryDAO salaryDAO;
+    private ISummaryService summaryService;
     private Mapper mapper;
 
     @Inject
-    public SalaryService(SalaryDAO salaryDAO, SummaryService summaryService, Mapper mapper) {
+    public SalaryService(ISalaryDAO salaryDAO, ISummaryService summaryService, Mapper mapper) {
         this.salaryDAO = salaryDAO;
         this.summaryService = summaryService;
         this.mapper = mapper;
@@ -88,7 +89,7 @@ public class SalaryService implements ISalaryService {
 
 
     @Override
-    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException {
+    public SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException, EntityNotFoundException {
 
         try {
             JPAHelperUtil.beginTransaction();
