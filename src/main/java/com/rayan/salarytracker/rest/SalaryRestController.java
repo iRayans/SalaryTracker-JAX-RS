@@ -50,7 +50,7 @@ public class SalaryRestController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException {
+    public Response insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityAlreadyExistsException, EntityInvalidArgumentsException, EntityNotFoundException {
         User user = getLoggedinUser();
         salaryInsertDTO.setUser(user);
         SalaryReadOnlyDTO salary = salaryService.insertSalary(salaryInsertDTO);
