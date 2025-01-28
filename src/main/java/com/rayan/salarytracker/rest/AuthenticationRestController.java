@@ -11,7 +11,7 @@ import com.rayan.salarytracker.dto.user.UserInsertDTO;
 import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.security.JWTService;
-import com.rayan.salarytracker.service.impl.UserService;
+import com.rayan.salarytracker.service.IUserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -32,12 +32,12 @@ public class AuthenticationRestController {
 
     private static final Logger LOGGER = LogManager.getLogger(AuthenticationRestController.class.getName());
 
-    private UserService userService;
+    private IUserService userService;
     private AuthenticationProvider authenticationProvider;
     private JWTService jwtService;
 
     @Inject
-    public AuthenticationRestController(UserService userService, AuthenticationProvider authenticationProvider,
+    public AuthenticationRestController(IUserService userService, AuthenticationProvider authenticationProvider,
                                         JWTService jwtService) {
         this.userService = userService;
         this.authenticationProvider = authenticationProvider;
