@@ -14,27 +14,24 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SalaryTrackerIT {
-    private static String siteURL;
+    private static String baseUrl;
     private static String jwtToken;
 
     @BeforeAll
     public static void init() {
-        String port = "9080";  // Make sure Open Liberty is running on this port
-        String war = "api";    // Adjust based on your application
-        siteURL = "http://localhost:" + port + "/" + war + "/auth/login";
+        String port = "9080";
+        baseUrl = "http://localhost:" + port + "/" + "api";
     }
 
     @Test
     public void testLoginAndGetJWT() throws JsonProcessingException {
-        // Create a JAX-RS client
         Client client = ClientBuilder.newClient();
-
-        // Define login credentials as JSON
+        String loginPath = baseUrl + "/auth/login";
         String loginPayload = "{\"email\":\"tester@ibm.com\", " +
                 "\"password\":\"test123&\"}";
 
         // Send POST request to login endpoint
-        Response response = client.target(siteURL)
+        Response response = client.target(loginPath)
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(loginPayload));
 
@@ -43,19 +40,16 @@ public class SalaryTrackerIT {
 
         // Read JSON response as String
         String jsonResponse = response.readEntity(String.class);
-        System.out.println("Raw JSON Response: " + jsonResponse);
 
         // Parse JSON using Jackson
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
         String jwtToken = jsonNode.get("token").asText();
-        System.out.println("JWT Token: " + jwtToken);
 
         // Ensure token is not null or empty
         assertNotNull(jwtToken, "JWT token should not be null");
         assertFalse(jwtToken.isEmpty(), "JWT token should not be empty");
 
-        // Close client
         client.close();
     }
 }
