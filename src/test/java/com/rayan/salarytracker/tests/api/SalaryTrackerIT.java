@@ -3,6 +3,7 @@ package com.rayan.salarytracker.tests.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rayan.salarytracker.model.Salary;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -37,9 +38,8 @@ public class SalaryTrackerIT {
 
 
     private static void loginAndExtractToken() {
-        client = ClientBuilder.newClient();
         String loginPath = baseUrl + "/auth/login";
-        String loginPayload = "{\"email\":\"rayan@gmail.com\", " +
+        String loginPayload = "{\"email\":\"tester@ibm.com\", " +
                 "\"password\":\"test123&\"}";
 
         // Send POST request to login endpoint
@@ -70,9 +70,33 @@ public class SalaryTrackerIT {
 
     }
 
+    private Salary createSalary() {
+        Salary salary = new Salary();
+        salary.setDescription("test description");
+        salary.setAmount(5000);
+        salary.setMonth("April");
+        return salary;
+    }
+
+    @Test
+    public void insertSalary() throws JsonProcessingException {
+        String insertSalaryPath = baseUrl + "/salaries";
+        Salary salary = createSalary();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String salaryJson = objectMapper.writeValueAsString(salary);
+        System.out.println(salaryJson);  // See what JSON is generated
+
+        Response response = client.target(insertSalaryPath)
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + jwtToken)
+                .post(Entity.entity(salaryJson, MediaType.APPLICATION_JSON));
+        assertEquals(201, response.getStatus(), "Insert salary failed!");
+
+    }
+
     @Test
     public void getAllSalaries() {
-        client = ClientBuilder.newClient();
         String salariesPath = baseUrl + "/salaries";
 
         Response response = client.target(salariesPath)
@@ -86,7 +110,6 @@ public class SalaryTrackerIT {
 
     @Test
     public void getExpenses() {
-        client = ClientBuilder.newClient();
         String expensesPath = baseUrl + "/expenses/" + userId;
         System.out.println("user id " + userId);
         Response response = client.target(expensesPath)
