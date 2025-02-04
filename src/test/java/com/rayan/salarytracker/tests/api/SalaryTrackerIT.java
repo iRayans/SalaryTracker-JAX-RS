@@ -1,6 +1,7 @@
 package com.rayan.salarytracker.tests.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rayan.salarytracker.model.Salary;
@@ -9,18 +10,20 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SalaryTrackerIT {
     private static String baseUrl;
     private static String jwtToken;
     private static Client client;
     private static int userId;
     private String authHeader;
+    private static Long salaryId;
 
     @BeforeAll
     public static void init() {
@@ -33,7 +36,7 @@ public class SalaryTrackerIT {
 
     @AfterAll
     public static void tearDown() {
-        client.close(); // ✅ Close client after all tests
+        client.close();
     }
 
 
@@ -79,13 +82,14 @@ public class SalaryTrackerIT {
     }
 
     @Test
+    @Order(1)
     public void insertSalary() throws JsonProcessingException {
         String insertSalaryPath = baseUrl + "/salaries";
         Salary salary = createSalary();
 
         ObjectMapper objectMapper = new ObjectMapper();
+        // serialize Salary object to JSON format
         String salaryJson = objectMapper.writeValueAsString(salary);
-        System.out.println(salaryJson);  // See what JSON is generated
 
         Response response = client.target(insertSalaryPath)
                 .request(MediaType.APPLICATION_JSON)
@@ -96,7 +100,8 @@ public class SalaryTrackerIT {
     }
 
     @Test
-    public void getAllSalaries() {
+    @Order(2)
+    public void getAllSalaries() throws JsonProcessingException {
         String salariesPath = baseUrl + "/salaries";
 
         Response response = client.target(salariesPath)
@@ -104,14 +109,33 @@ public class SalaryTrackerIT {
                 .header("Authorization", "Bearer " + jwtToken)
                 .get();
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = response.readEntity(String.class);
+
+        List<Salary> salaries = objectMapper.readValue(jsonResponse, new TypeReference<List<Salary>>() {
+        });
+
+        salaryId = salaries.get(0).getId();
+        System.out.println("SalaryId: " + salaryId);
+
         assertEquals(200, response.getStatus(), "Salaries request failed!");
 
     }
 
     @Test
+    @Order(3)
+    public void deleteSalary() throws JsonProcessingException {
+        String salariesPath = baseUrl + "/salaries/" + salaryId;
+        Response response = client.target(salariesPath)
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + jwtToken)
+                .delete();
+        assertEquals(204, response.getStatus(), "Delete salary failed!");
+    }
+
+    @Test
     public void getExpenses() {
         String expensesPath = baseUrl + "/expenses/" + userId;
-        System.out.println("user id " + userId);
         Response response = client.target(expensesPath)
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + jwtToken)
