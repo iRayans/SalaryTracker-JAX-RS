@@ -115,8 +115,8 @@ public class SalaryTrackerIT {
         List<Salary> salaries = objectMapper.readValue(jsonResponse, new TypeReference<List<Salary>>() {
         });
 
+        Salary salary = salaries.get(0);
         salaryId = salaries.get(0).getId();
-        System.out.println("SalaryId: " + salaryId);
 
         assertEquals(200, response.getStatus(), "Salaries request failed!");
 
@@ -124,16 +124,20 @@ public class SalaryTrackerIT {
 
     @Test
     @Order(3)
-    public void deleteSalary() throws JsonProcessingException {
-        String salariesPath = baseUrl + "/salaries/" + salaryId;
-        Response response = client.target(salariesPath)
+    public void updateSalary() {
+        String updateSalaryPath = baseUrl + "/salaries/" + salaryId;
+        String updatePayload = "{\"month\":\"November\"}";
+
+        Response response = client.target(updateSalaryPath)
                 .request(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + jwtToken)
-                .delete();
-        assertEquals(204, response.getStatus(), "Delete salary failed!");
+                .put(Entity.json(updatePayload));
+
+        assertEquals(200, response.getStatus(), "Update request failed!");
     }
 
     @Test
+    @Order(4)
     public void getExpenses() {
         String expensesPath = baseUrl + "/expenses/" + userId;
         Response response = client.target(expensesPath)
@@ -142,8 +146,18 @@ public class SalaryTrackerIT {
                 .get();
 
         assertEquals(200, response.getStatus(), "Expenses request failed!");
-
-        String jsonResponse = response.readEntity(String.class);
-        System.out.println("Expenses Response: " + jsonResponse);
     }
+
+    @Test
+    @Order(5)
+    public void deleteSalary() {
+        String salariesPath = baseUrl + "/salaries/" + salaryId;
+        Response response = client.target(salariesPath)
+                .request(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + jwtToken)
+                .delete();
+        assertEquals(204, response.getStatus(), "Delete salary failed!");
+    }
+
+
 }
