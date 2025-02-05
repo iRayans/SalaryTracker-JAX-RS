@@ -67,7 +67,7 @@ public class SalaryRestController {
         salary.setUser(user);
 
         SalaryReadOnlyDTO salaryReadOnlyDTO = salaryService.updateSalary(salaryId, salary);
-        return Response.status(Response.Status.CREATED).entity(salaryReadOnlyDTO).build();
+        return Response.status(Response.Status.OK).entity(salaryReadOnlyDTO).build();
     }
 
     @DELETE
