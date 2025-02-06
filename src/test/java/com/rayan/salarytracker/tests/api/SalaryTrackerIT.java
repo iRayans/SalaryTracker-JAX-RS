@@ -2,7 +2,6 @@ package com.rayan.salarytracker.tests.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rayan.salarytracker.model.Salary;
 import jakarta.ws.rs.client.Client;
@@ -14,24 +13,25 @@ import org.junit.jupiter.api.*;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SalaryTrackerIT {
     private static String baseUrl;
-    private static String jwtToken;
+
     private static Client client;
-    private static int userId;
+    private static AuthServiceTest auth = new AuthServiceTest();
     private String authHeader;
     private static Long salaryId;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws JsonProcessingException {
         String port = "9080";
         baseUrl = "http://localhost:" + port + "/" + "api";
         client = ClientBuilder.newClient();
 
-        loginAndExtractToken();
+        auth.register();
+        auth.login();
     }
 
     @AfterAll
@@ -39,39 +39,6 @@ public class SalaryTrackerIT {
         client.close();
     }
 
-
-    private static void loginAndExtractToken() {
-        String loginPath = baseUrl + "/auth/login";
-        String loginPayload = "{\"email\":\"tester@ibm.com\", " +
-                "\"password\":\"test123&\"}";
-
-        // Send POST request to login endpoint
-        Response response = client.target(loginPath)
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(loginPayload));
-
-        // Check HTTP status
-        assertEquals(200, response.getStatus(), "Login request failed!");
-
-        // Read JSON response as String
-        String jsonResponse = response.readEntity(String.class);
-
-        // Parse JSON using Jackson
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(jsonResponse);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        jwtToken = jsonNode.get("token").asText();
-        String userId = jsonNode.get("user").get("id").asText();
-
-        // Ensure token is not null or empty
-        assertNotNull(jwtToken, "JWT token should not be null");
-        assertFalse(jwtToken.isEmpty(), "JWT token should not be empty");
-
-    }
 
     private Salary createSalary() {
         Salary salary = new Salary();
@@ -93,7 +60,7 @@ public class SalaryTrackerIT {
 
         Response response = client.target(insertSalaryPath)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
+                .header("Authorization", "Bearer " + auth.getJwtToken())
                 .post(Entity.entity(salaryJson, MediaType.APPLICATION_JSON));
         assertEquals(201, response.getStatus(), "Insert salary failed!");
 
@@ -106,7 +73,7 @@ public class SalaryTrackerIT {
 
         Response response = client.target(salariesPath)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
+                .header("Authorization", "Bearer " + auth.getJwtToken())
                 .get();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -130,7 +97,7 @@ public class SalaryTrackerIT {
 
         Response response = client.target(updateSalaryPath)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
+                .header("Authorization", "Bearer " + auth.getJwtToken())
                 .put(Entity.json(updatePayload));
 
         assertEquals(200, response.getStatus(), "Update request failed!");
@@ -139,10 +106,10 @@ public class SalaryTrackerIT {
     @Test
     @Order(4)
     public void getExpenses() {
-        String expensesPath = baseUrl + "/expenses/" + userId;
+        String expensesPath = baseUrl + "/expenses/" + auth.getUserId();
         Response response = client.target(expensesPath)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
+                .header("Authorization", "Bearer " + auth.getJwtToken())
                 .get();
 
         assertEquals(200, response.getStatus(), "Expenses request failed!");
@@ -154,9 +121,11 @@ public class SalaryTrackerIT {
         String salariesPath = baseUrl + "/salaries/" + salaryId;
         Response response = client.target(salariesPath)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtToken)
+                .header("Authorization", "Bearer " + auth.getJwtToken())
                 .delete();
         assertEquals(204, response.getStatus(), "Delete salary failed!");
+
+        auth.deleteUser();
     }
 
 
