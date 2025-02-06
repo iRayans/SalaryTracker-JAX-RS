@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AbstractSalaryTrackerTest {
+public class AuthServiceTest {
     private Client client;
     private String port;
     private String baseUrl;
@@ -56,6 +56,7 @@ public class AbstractSalaryTrackerTest {
     }
 
     public void login() {
+        init();
         String loginPath = baseUrl + "login";
         String loginPayload = "{\"email\":\"tester@ibm.com\", " +
                 "\"password\":\"test123&\"}";
