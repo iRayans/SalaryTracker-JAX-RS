@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  salarytrackerapp:
+    container_name: salarytracker-app
+    image: irayan68/salarytracker_app_v2
+    restart: on-failure
+    ports:
+      - "9080:9080"
+    environment:
+      WAIT_HOSTS: mysqldb:3306
+    depends_on:
+      - mysqldb
+    networks:
+      - salarytracker-network
+
+  mysqldb:
+    container_name: docker-mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Password1
+      MYSQL_DATABASE: salarytrackerDev
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "6666:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "--host=mysqldb", "--user=root", "--password=Password1" ]
+      interval: 10s
+      timeout: 20s
+      retries: 5
+    networks:
+      - salarytracker-network
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  salarytracker-network:
+    driver: bridge
