@@ -1,5 +1,16 @@
 version: "3.8"
 services:
+  frontend:
+    container_name: frontend-salarytracker
+    build:
+      context: /Users/rayan/projects/SalaryTracker-Frontend-main  # Path to your frontend code
+    ports:
+      - "3000:80"  # Expose the frontend app on port 3000 (default for React)
+    depends_on:
+      - salarytrackerapp  # Make sure the backend is up before the frontend starts
+    networks:
+      - salarytracker-network
+
   salarytrackerapp:
     container_name: salarytracker-app
     image: irayan68/salarytracker_app_v2
