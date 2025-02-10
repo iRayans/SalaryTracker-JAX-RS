@@ -37,10 +37,10 @@ public class ExpenseService implements IExpenseService {
         this.summaryService = summaryService;
     }
 
-    public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId) {
+    public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId, Long userId) {
         try {
             JPAHelperUtil.beginTransaction();
-            List<Expense> expenses = expenseDAO.getExpensesBySalaryId(salaryId);
+            List<Expense> expenses = expenseDAO.getExpensesBySalaryId(salaryId, userId);
             JPAHelperUtil.commitTransaction();
             return expenses.stream().map(mapper::mapToExpenseReadOnlyDTO).toList();
         } catch (Exception e) {
