@@ -18,12 +18,13 @@ public class ExpenseDAO extends GenericCRUDImpl<Expense> implements IExpenseDAO 
     }
 
     @Override
-    public List<Expense> getExpensesBySalaryId(Long salaryId) {
-        String jpql = "SELECT e FROM Expense e WHERE e.salary.id = :salaryId";
+    public List<Expense> getExpensesBySalaryId(Long salaryId, Long userId) {
+        String jpql = "SELECT e FROM Expense e JOIN e.salary s WHERE e.salary.id = :salaryId AND s.user.id = :userId";
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
             TypedQuery<Expense> query = em.createQuery(jpql, Expense.class);
             query.setParameter("salaryId", salaryId);
+            query.setParameter("userId", userId);
             return query.getResultList();
         } catch (NoResultException e) {
             return Collections.emptyList();

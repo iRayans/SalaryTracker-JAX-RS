@@ -6,14 +6,18 @@ import com.rayan.salarytracker.dto.expense.ExpenseInsertDTO;
 import com.rayan.salarytracker.dto.expense.ExpenseReadOnlyDTO;
 import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
 import com.rayan.salarytracker.model.Expense;
+import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.service.impl.ExpenseService;
 import com.rayan.salarytracker.service.impl.SummaryService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
+import java.security.Principal;
 import java.util.List;
 
 @Path("/expenses")
@@ -22,6 +26,8 @@ public class ExpenseRestController {
 
     private ExpenseService expenseService;
     private SummaryService summaryService;
+    @Context
+    private SecurityContext securityContext;
 
     @Inject
     public ExpenseRestController(ExpenseService expenseService, SummaryService summaryService) {
@@ -47,7 +53,8 @@ public class ExpenseRestController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Response getAllExpenses(@PathParam("id") Long salaryId) {
-        List<ExpenseReadOnlyDTO> expenseReadOnlyDTOList = expenseService.getAllExpenses(salaryId);
+        Long userId = getLoggedinUser().getId();
+        List<ExpenseReadOnlyDTO> expenseReadOnlyDTOList = expenseService.getAllExpenses(salaryId, userId);
         return Response.status(Response.Status.OK).entity(expenseReadOnlyDTOList).build();
     }
 
@@ -77,4 +84,14 @@ public class ExpenseRestController {
         SummaryReadOnlyDTO summaryReadOnlyDTOS = summaryService.getSummary(salaryId);
         return Response.status(Response.Status.OK).entity(summaryReadOnlyDTOS).build();
     }
+
+    private User getLoggedinUser() {
+        Principal principal = securityContext.getUserPrincipal();
+        if (principal == null) {
+//            LOGGER.error("No logged-in user found in SecurityContext.");
+            throw new IllegalStateException("No logged-in user found.");
+        }
+        return (User) principal;
+    }
+
 }
