@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IExpenseDAO extends IGenericCRUD<Expense> {
 
-    List<Expense> getExpensesBySalaryId(Long salaryId);
+    List<Expense> getExpensesBySalaryId(Long salaryId, Long userId);
 }
