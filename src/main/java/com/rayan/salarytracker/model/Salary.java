@@ -1,6 +1,5 @@
 package com.rayan.salarytracker.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,11 +31,9 @@ public class Salary implements IdentifiableEntity {
     @Column(name = "amount")
     private int amount;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", timezone = "UTC")
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", timezone = "UTC")
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Timestamp updatedAt;
