@@ -4,8 +4,6 @@
     <!-- Enable features -->
     <featureManager>
         <feature>restfulWS-3.1</feature>
-        <feature>cdi-4.0</feature>
-        <feature>jsonp-2.1</feature>
         <feature>jsonb-3.0</feature>
     </featureManager>
 
@@ -40,7 +38,7 @@
     <!--  Enabling CORS  -->
     <cors id="defaultCORSConfig"
           domain="/"
-          allowedOrigins="http://localhost:3000"
+          allowedOrigins="http://localhost:8080"
           allowedMethods="GET, POST, PUT, DELETE, OPTIONS"
           allowedHeaders="Origin, Content-Type, Authorization, Cache-Control, Expires, Pragma"
           allowCredentials="true"
