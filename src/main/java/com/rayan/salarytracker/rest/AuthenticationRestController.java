@@ -18,13 +18,10 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.security.Principal;
 
 @Path("/auth")
 @ApplicationScoped
@@ -66,7 +63,7 @@ public class AuthenticationRestController {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginUser(UserLoginDTO userLoginDTO, @Context Principal principal) throws EntityNotFoundException, EntityInvalidArgumentsException {
+    public Response loginUser(UserLoginDTO userLoginDTO) throws EntityNotFoundException, EntityInvalidArgumentsException {
         System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword());
 
         // Authentication
@@ -77,13 +74,6 @@ public class AuthenticationRestController {
 //            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        // Commented out for now...
-        // if (principal != null) {
-        //     String username = principal.getName();
-        //     if (userLoginDTO.getEmail().equals(username)) {
-        //         return Response.status(Response.Status.OK).entity("Already authenticated").build();
-        //     }
-        // }
 
         UserReadOnlyDTO userReadOnlyDTO = userService.findUserByEmail(userLoginDTO.getEmail());
         String username = userReadOnlyDTO.getName();
