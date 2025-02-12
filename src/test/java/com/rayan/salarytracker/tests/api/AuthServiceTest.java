@@ -1,8 +1,8 @@
 package com.rayan.salarytracker.tests.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.json.JsonObject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -20,7 +20,7 @@ public class AuthServiceTest {
     private String baseUrl;
     private String email;
     private String password;
-    private ObjectMapper objectMapper;
+    private Jsonb jsonb;
     @Getter
     private String jwtToken;
     @Getter
@@ -34,7 +34,7 @@ public class AuthServiceTest {
         client = ClientBuilder.newClient();
         email = "testerw@gmail.com";
         password = "test123&";
-        objectMapper = new ObjectMapper();
+        jsonb = JsonbBuilder.create();
     }
 
     public AuthServiceTest() {
@@ -42,7 +42,7 @@ public class AuthServiceTest {
     }
 
 
-    public void register() throws JsonProcessingException {
+    public void register() {
         LOGGER.info("Registering user...");
         String registerUrl = baseUrl + "register";
         Map<String, String> payload = Map.of(
@@ -51,7 +51,7 @@ public class AuthServiceTest {
                 "confirmPassword", "test123&",
                 "role", "ADMIN"
         );
-        String registerJson = objectMapper.writeValueAsString(payload);
+        String registerJson = jsonb.toJson(payload);
         Response response = client.target(registerUrl)
                 .request()
                 .post(Entity.entity(registerJson, MediaType.APPLICATION_JSON));
@@ -59,16 +59,21 @@ public class AuthServiceTest {
 
     }
 
-    public void login() throws JsonProcessingException {
+    public void login() {
         LOGGER.info("Login user...");
         String loginPath = baseUrl + "login";
-        ObjectMapper objectMapper = new ObjectMapper();
+
+        Jsonb jsonb = JsonbBuilder.create();
+
+        // Create JSON payload as a Map
         Map<String, String> payload = Map.of(
                 "email", email,
                 "password", password
         );
 
-        String loginJson = objectMapper.writeValueAsString(payload);
+        // Convert to JSON string using JSON-B
+        String loginJson = jsonb.toJson(payload);
+
         // Send POST request to login endpoint
         Response response = client.target(loginPath)
                 .request(MediaType.APPLICATION_JSON)
@@ -77,18 +82,12 @@ public class AuthServiceTest {
         // Read JSON response as String
         String jsonResponse = response.readEntity(String.class);
 
-        // Parse JSON using Jackson
+        // Parse JSON response using JSON-B
+        JsonObject jsonNode = jsonb.fromJson(jsonResponse, JsonObject.class);
 
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(jsonResponse);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        this.jwtToken = jsonNode.get("token").asText();
-        this.userId = jsonNode.get("user").get("id").asText();
-
-
+        // Extract values
+        this.jwtToken = jsonNode.getString("token");
+        this.userId = jsonNode.getJsonObject("user").getJsonNumber("id").toString();
     }
 
     public void deleteUser() {
