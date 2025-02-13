@@ -37,6 +37,7 @@ public class ExpenseService implements IExpenseService {
         this.summaryService = summaryService;
     }
 
+    @Override
     public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId, Long userId) {
         try {
             JPAHelperUtil.beginTransaction();

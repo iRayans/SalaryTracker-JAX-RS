@@ -71,7 +71,7 @@ public class AuthServiceTest {
                 "password", password
         );
 
-        // Convert to JSON string using JSON-B
+        // Convert to JSON string using
         String loginJson = jsonb.toJson(payload);
 
         // Send POST request to login endpoint
@@ -82,7 +82,7 @@ public class AuthServiceTest {
         // Read JSON response as String
         String jsonResponse = response.readEntity(String.class);
 
-        // Parse JSON response using JSON-B
+        // Parse JSON response
         JsonObject jsonNode = jsonb.fromJson(jsonResponse, JsonObject.class);
 
         // Extract values

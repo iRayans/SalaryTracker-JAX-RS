@@ -3,7 +3,7 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>restfulWS-3.1</feature>
+        <feature>restfulWS-3.1</feature> <!-- Include: JAX-RS CDI JSON-P -->
         <feature>jsonb-3.0</feature>
     </featureManager>
 
