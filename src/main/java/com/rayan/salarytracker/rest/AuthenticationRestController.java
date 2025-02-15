@@ -71,7 +71,6 @@ public class AuthenticationRestController {
         if (!isAuthenticated) {
             LOGGER.error("email or password incorrect");
             throw new EntityInvalidArgumentsException("User", "email or password incorrect");
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
 
