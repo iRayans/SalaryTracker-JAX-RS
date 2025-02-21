@@ -2,6 +2,7 @@ package com.rayan.salarytracker.rest;
 
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
+import com.rayan.salarytracker.service.IUserService;
 import com.rayan.salarytracker.service.impl.UserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,7 +16,7 @@ import java.util.List;
 @Path("/users")
 public class UserManagementRestController {
 
-    private UserService userService;
+    private IUserService userService;
 
     public UserManagementRestController() {
     }
@@ -45,9 +46,8 @@ public class UserManagementRestController {
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@PathParam("userId") Long id) throws EntityNotFoundException {
-        UserReadOnlyDTO userReadOnlyDTO = userService.getUserById(id);
         userService.deleteUser(id);
-        return Response.status(Response.Status.OK).entity(userReadOnlyDTO).build();
+        return Response.status(Response.Status.OK).build();
     }
 
 }

@@ -63,8 +63,7 @@ public class UserService implements IUserService {
     public void deleteUser(Long id) throws EntityNotFoundException {
         try {
             JPAHelperUtil.beginTransaction();
-            userDAO.getById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("User", " with id: " + id + " Not found."));
+            getUserById(id);
             userDAO.delete(id);
             JPAHelperUtil.commitTransaction();
             LOGGER.info("User with id: {} was deleted.", id);
