@@ -64,8 +64,6 @@ public class AuthenticationRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUser(UserLoginDTO userLoginDTO) throws EntityNotFoundException, EntityInvalidArgumentsException {
-        System.out.println(userLoginDTO.getEmail() + "   " + userLoginDTO.getPassword());
-
         // Authentication
         boolean isAuthenticated = authenticationProvider.authenticate(userLoginDTO);
         if (!isAuthenticated) {
