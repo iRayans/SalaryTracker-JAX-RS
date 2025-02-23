@@ -32,11 +32,13 @@ public class SalaryService implements ISalaryService {
     private ISalaryDAO salaryDAO;
     private ISummaryService summaryService;
     private Mapper mapper;
+    private ExpenseService expenseService;
 
     @Inject
-    public SalaryService(ISalaryDAO salaryDAO, ISummaryService summaryService, Mapper mapper) {
+    public SalaryService(ISalaryDAO salaryDAO, ISummaryService summaryService, ExpenseService expenseService, Mapper mapper) {
         this.salaryDAO = salaryDAO;
         this.summaryService = summaryService;
+        this.expenseService = expenseService;
         this.mapper = mapper;
     }
 
@@ -127,13 +129,17 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
-    public SalaryReadOnlyDTO updateSalary(Long salaryId, Salary salary) throws AppServerException, EntityNotFoundException {
+    public SalaryReadOnlyDTO updateSalary(Long salaryId, Salary salary) throws AppServerException, EntityNotFoundException, EntityInvalidArgumentsException {
 
         try {
             JPAHelperUtil.beginTransaction();
             Salary existingSalary = salaryDAO.getById(salaryId)
                     .orElseThrow(() -> new EntityNotFoundException("Salary", "Salary with id: " + salary.getId() + " not found."));
 
+            // Check if salary already has expenses
+            if (expenseService.salaryHasExpense(salaryId)) {
+                throw new EntityInvalidArgumentsException("Salary", "Cannot update expenses with id: " + salaryId + " already has expenses.");
+            }
             // Update only provided fields
             updateFields(existingSalary, salary);
 
