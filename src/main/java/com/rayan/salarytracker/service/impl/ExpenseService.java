@@ -84,6 +84,11 @@ public class ExpenseService implements IExpenseService {
 
     }
 
+    public boolean salaryHasExpense(Long salaryId) {
+        // Entity Manager manged by the caller.
+        return expenseDAO.salaryHasExpense(salaryId);
+    }
+
     @Override
     public ExpenseReadOnlyDTO updateExpense(Long expenseId, Expense expense) throws AppServerException, EntityNotFoundException {
         try {

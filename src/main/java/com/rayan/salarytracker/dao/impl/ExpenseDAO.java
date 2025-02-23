@@ -30,4 +30,19 @@ public class ExpenseDAO extends GenericCRUDImpl<Expense> implements IExpenseDAO 
             return Collections.emptyList();
         }
     }
+
+    public boolean salaryHasExpense(Long salaryId) {
+        String jpql = "SELECT COUNT(e) FROM Expense e WHERE e.salary.id = :salaryId";
+        try {
+            EntityManager em = JPAHelperUtil.getEntityManager();
+            Long count = em.createQuery(jpql, Long.class)
+                    .setParameter("salaryId", salaryId)
+                    .getSingleResult();
+
+            return count > 0;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
 }
+

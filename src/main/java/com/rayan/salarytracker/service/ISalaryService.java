@@ -16,7 +16,7 @@ public interface ISalaryService {
 
     SalaryReadOnlyDTO insertSalary(SalaryInsertDTO salaryInsertDTO) throws AppServerException, EntityNotFoundException, EntityAlreadyExistsException, EntityInvalidArgumentsException;
 
-    SalaryReadOnlyDTO updateSalary(Long salaryId, Salary Salary) throws AppServerException, EntityNotFoundException;
+    SalaryReadOnlyDTO updateSalary(Long salaryId, Salary Salary) throws AppServerException, EntityNotFoundException, EntityInvalidArgumentsException;
 
     void deleteSalary(Long salaryId, Long userId) throws EntityNotFoundException;
 

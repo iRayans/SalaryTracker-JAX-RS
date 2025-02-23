@@ -60,7 +60,7 @@ public class SalaryRestController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response updateSalary(@PathParam("id") Long salaryId, Salary salary) throws AppServerException, EntityNotFoundException {
+    public Response updateSalary(@PathParam("id") Long salaryId, Salary salary) throws AppServerException, EntityNotFoundException, EntityInvalidArgumentsException {
         User user = getLoggedinUser();
         salary.setUser(user);
 
