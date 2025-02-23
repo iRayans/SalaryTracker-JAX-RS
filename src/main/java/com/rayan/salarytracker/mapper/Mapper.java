@@ -68,7 +68,7 @@ public class Mapper {
                 null,
                 expenseInsertDTO.getDescription(),
                 expenseInsertDTO.getAmount(),
-                BudgetRuleAllocation.valueOf(expenseInsertDTO.getBudgetRuleAllocation()),
+                BudgetRuleAllocation.valueOf(expenseInsertDTO.getBudgetRule()),
                 expenseInsertDTO.getBank(),
                 expenseInsertDTO.getStatus(),
                 null,

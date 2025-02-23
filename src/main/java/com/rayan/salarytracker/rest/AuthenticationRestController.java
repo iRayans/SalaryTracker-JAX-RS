@@ -12,7 +12,6 @@ import com.rayan.salarytracker.dto.user.UserLoginDTO;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.security.JWTService;
 import com.rayan.salarytracker.service.IUserService;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -24,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Path("/auth")
-@ApplicationScoped
 public class AuthenticationRestController {
 
     private static final Logger LOGGER = LogManager.getLogger(AuthenticationRestController.class.getName());
@@ -32,6 +30,7 @@ public class AuthenticationRestController {
     private IUserService userService;
     private AuthenticationProvider authenticationProvider;
     private JWTService jwtService;
+    private ValidatorUtil validatorUtil;
 
     @Inject
     public AuthenticationRestController(IUserService userService, AuthenticationProvider authenticationProvider,
@@ -39,6 +38,7 @@ public class AuthenticationRestController {
         this.userService = userService;
         this.authenticationProvider = authenticationProvider;
         this.jwtService = jwtService;
+        this.validatorUtil = new ValidatorUtil();
     }
 
     public AuthenticationRestController() {
@@ -51,7 +51,7 @@ public class AuthenticationRestController {
     public Response registerUser(UserInsertDTO userInsertDTO)
             throws AppServerException, EntityInvalidArgumentsException, EntityAlreadyExistsException {
         // Validation
-        ValidatorUtil.validateDTO(userInsertDTO);
+        validatorUtil.validateDTO(userInsertDTO);
 
         UserReadOnlyDTO userReadOnlyDTO = userService.insertUser(userInsertDTO);
         return Response.status(Response.Status.CREATED)
