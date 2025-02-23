@@ -9,7 +9,6 @@ import com.rayan.salarytracker.dto.salary.SalaryReadOnlyDTO;
 import com.rayan.salarytracker.model.Salary;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.service.impl.SalaryService;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -21,7 +20,6 @@ import java.security.Principal;
 import java.util.List;
 
 @Path("/salaries")
-@ApplicationScoped
 public class SalaryRestController {
     @Context
     private SecurityContext securityContext;

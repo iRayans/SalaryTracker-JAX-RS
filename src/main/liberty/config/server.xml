@@ -8,11 +8,6 @@
     </featureManager>
 
 
-    <!--    <logging consoleLogLevel="INFO" traceSpecification="com.ibm.ws.cdi=all:com.ibm.ws.injection=all" />-->
-    <!--    <logging consoleLogLevel="INFO" traceSpecification="com.ibm.ws.injection=all:com.ibm.ws.cdi=all" />-->
-    <!--    <logging traceSpecification="org.jboss.weld=all:com.ibm.ws.jpa=all" />-->
-
-
     <library id="log4jConfig">
         <folder dir="/src/main/resources"/>
     </library>

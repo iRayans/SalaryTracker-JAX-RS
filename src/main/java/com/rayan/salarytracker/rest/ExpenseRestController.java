@@ -9,7 +9,6 @@ import com.rayan.salarytracker.model.Expense;
 import com.rayan.salarytracker.model.User;
 import com.rayan.salarytracker.service.impl.ExpenseService;
 import com.rayan.salarytracker.service.impl.SummaryService;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -21,7 +20,6 @@ import java.security.Principal;
 import java.util.List;
 
 @Path("/expenses")
-@ApplicationScoped
 public class ExpenseRestController {
 
     private ExpenseService expenseService;
