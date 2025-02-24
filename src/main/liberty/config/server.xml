@@ -7,12 +7,6 @@
         <feature>jsonb-3.0</feature>
     </featureManager>
 
-
-    <library id="log4jConfig">
-        <folder dir="/src/main/resources"/>
-    </library>
-
-
     <classloader commonLibraryRef="log4jConfig"/>
 
 
