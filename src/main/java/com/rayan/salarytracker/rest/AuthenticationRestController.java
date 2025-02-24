@@ -34,11 +34,11 @@ public class AuthenticationRestController {
 
     @Inject
     public AuthenticationRestController(IUserService userService, AuthenticationProvider authenticationProvider,
-                                        JWTService jwtService) {
+                                        JWTService jwtService, ValidatorUtil validatorUtil) {
         this.userService = userService;
         this.authenticationProvider = authenticationProvider;
         this.jwtService = jwtService;
-        this.validatorUtil = new ValidatorUtil();
+        this.validatorUtil = validatorUtil;
     }
 
     public AuthenticationRestController() {
