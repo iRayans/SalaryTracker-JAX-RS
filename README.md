@@ -1,4 +1,4 @@
-# 🏦 Salary-Tracker
+# Salary-Tracker
 
 ## Why I Built It
 
@@ -79,13 +79,5 @@ The database consists of the following tables:
 - `GET /users/` – Retrieve all users.
 - `DELETE /users/{userId}` – Delete a user.
 
----
-
-## 4️⃣ Next Steps
-
-- 📌 List **API Endpoints** (GET, POST, DELETE, etc.).
-- 📌 Create **System Architecture Diagram**.
-
-🚀 Stay tuned for more updates! 🎯
 
 
