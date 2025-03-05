@@ -16,7 +16,7 @@
     </properties>
 
     <dependencies>
-        <!-- Jakarta EE and MicroProfile APIs -->
+        <!-- Jakarta EE -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
