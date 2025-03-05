@@ -27,22 +27,15 @@ public class AuthenticationRestController {
 
     private static final Logger LOGGER = LogManager.getLogger(AuthenticationRestController.class.getName());
 
+    @Inject
     private IUserService userService;
+    @Inject
     private AuthenticationProvider authenticationProvider;
+    @Inject
     private JWTService jwtService;
+    @Inject
     private ValidatorUtil validatorUtil;
 
-    @Inject
-    public AuthenticationRestController(IUserService userService, AuthenticationProvider authenticationProvider,
-                                        JWTService jwtService, ValidatorUtil validatorUtil) {
-        this.userService = userService;
-        this.authenticationProvider = authenticationProvider;
-        this.jwtService = jwtService;
-        this.validatorUtil = validatorUtil;
-    }
-
-    public AuthenticationRestController() {
-    }
 
     @POST
     @Path("/register")

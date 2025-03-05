@@ -29,22 +29,14 @@ public class SalaryService implements ISalaryService {
             "July", "August", "September", "October", "November", "December"
     ));
 
-    private ISalaryDAO salaryDAO;
-    private ISummaryService summaryService;
-    private Mapper mapper;
-    private ExpenseService expenseService;
-
     @Inject
-    public SalaryService(ISalaryDAO salaryDAO, ISummaryService summaryService, ExpenseService expenseService, Mapper mapper) {
-        this.salaryDAO = salaryDAO;
-        this.summaryService = summaryService;
-        this.expenseService = expenseService;
-        this.mapper = mapper;
-    }
-
-    public SalaryService() {
-    }
-
+    private ISalaryDAO salaryDAO;
+    @Inject
+    private ISummaryService summaryService;
+    @Inject
+    private Mapper mapper;
+    @Inject
+    private ExpenseService expenseService;
 
     @Override
     public List<SalaryReadOnlyDTO> getAllSalaries() {

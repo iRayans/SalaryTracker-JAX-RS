@@ -4,7 +4,6 @@ import com.rayan.salarytracker.core.enums.ExpenseAction;
 import com.rayan.salarytracker.core.exception.AppServerException;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dao.ISummaryDAO;
-import com.rayan.salarytracker.dao.impl.SummaryDAO;
 import com.rayan.salarytracker.database.JPAHelperUtil;
 import com.rayan.salarytracker.dto.summary.SummaryReadOnlyDTO;
 import com.rayan.salarytracker.mapper.Mapper;
@@ -20,17 +19,10 @@ import org.apache.logging.log4j.Logger;
 public class SummaryService implements ISummaryService {
     private static final Logger LOGGER = LogManager.getLogger(SummaryService.class.getName());
 
-    private ISummaryDAO summaryDAO;
-    private Mapper mapper;
-
-    public SummaryService() {
-    }
-
     @Inject
-    public SummaryService(SummaryDAO summaryDAO, Mapper mapper) {
-        this.summaryDAO = summaryDAO;
-        this.mapper = mapper;
-    }
+    private ISummaryDAO summaryDAO;
+    @Inject
+    private Mapper mapper;
 
     @Override
     public SummaryReadOnlyDTO getSummary(Long salaryId) throws EntityNotFoundException {

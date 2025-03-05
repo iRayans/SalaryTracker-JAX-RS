@@ -21,18 +21,10 @@ public class UserService implements IUserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class.getName());
 
-
-    private IUserDAO userDAO;
-    private Mapper mapper;
-
-    public UserService() {
-    }
-
     @Inject
-    public UserService(IUserDAO userDAO, Mapper mapper) {
-        this.userDAO = userDAO;
-        this.mapper = mapper;
-    }
+    private IUserDAO userDAO;
+    @Inject
+    private Mapper mapper;
 
     @Override
     public UserReadOnlyDTO insertUser(UserInsertDTO userInsertDTO) throws AppServerException {

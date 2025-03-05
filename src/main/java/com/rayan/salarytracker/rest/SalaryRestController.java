@@ -24,15 +24,9 @@ public class SalaryRestController {
     @Context
     private SecurityContext securityContext;
 
+    @Inject
     private SalaryService salaryService;
 
-    @Inject
-    public SalaryRestController(SalaryService salaryService) {
-        this.salaryService = salaryService;
-    }
-
-    public SalaryRestController() {
-    }
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)

@@ -22,19 +22,12 @@ import java.util.List;
 @Path("/expenses")
 public class ExpenseRestController {
 
+    @Inject
     private ExpenseService expenseService;
+    @Inject
     private SummaryService summaryService;
     @Context
     private SecurityContext securityContext;
-
-    @Inject
-    public ExpenseRestController(ExpenseService expenseService, SummaryService summaryService) {
-        this.expenseService = expenseService;
-        this.summaryService = summaryService;
-    }
-
-    public ExpenseRestController() {
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

@@ -3,7 +3,6 @@ package com.rayan.salarytracker.rest;
 import com.rayan.salarytracker.core.exception.EntityNotFoundException;
 import com.rayan.salarytracker.dto.user.UserReadOnlyDTO;
 import com.rayan.salarytracker.service.IUserService;
-import com.rayan.salarytracker.service.impl.UserService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -14,17 +13,9 @@ import java.util.List;
 @Path("/users")
 public class UserManagementRestController {
 
+    @Inject
     private IUserService userService;
 
-    public UserManagementRestController() {
-    }
-
-    @Inject
-    public UserManagementRestController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("userId") Long id) throws EntityNotFoundException {

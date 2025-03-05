@@ -24,18 +24,15 @@ import java.util.List;
 public class ExpenseService implements IExpenseService {
     private static final Logger LOGGER = LogManager.getLogger(ExpenseService.class.getName());
 
+    @Inject
     private IExpenseDAO expenseDAO;
+    @Inject
     private Mapper mapper;
+    @Inject
     private ISalaryDAO salaryDAO;
+    @Inject
     private ISummaryService summaryService;
 
-    @Inject
-    public ExpenseService(IExpenseDAO expenseDAO, Mapper mapper, ISalaryDAO salaryDAO, ISummaryService summaryService) {
-        this.expenseDAO = expenseDAO;
-        this.mapper = mapper;
-        this.salaryDAO = salaryDAO;
-        this.summaryService = summaryService;
-    }
 
     @Override
     public List<ExpenseReadOnlyDTO> getAllExpenses(Long salaryId, Long userId) {
@@ -51,10 +48,6 @@ public class ExpenseService implements IExpenseService {
         } finally {
             JPAHelperUtil.closeEntityManager();
         }
-    }
-
-
-    public ExpenseService() {
     }
 
     @Override
