@@ -51,13 +51,13 @@ public class SalaryService implements ISalaryService {
     }
 
     @Override
-    public List<SalaryReadOnlyDTO> getAllUserSalaries(Long userId) {
+    public List<SalaryReadOnlyDTO> getAllUserSalaries(Long userId, int year) {
         List<SalaryReadOnlyDTO> salaryReadOnlyDTOs = new ArrayList<>();
         try {
             JPAHelperUtil.beginTransaction();
 
             // Fetch salaries and map to DTOs
-            List<Salary> salaries = salaryDAO.findSalaryByUserId(userId);
+            List<Salary> salaries = salaryDAO.findSalaryByUserId(userId, year);
             if (salaries.isEmpty()) {
                 LOGGER.info("No salaries found for user ID: {}", userId);
                 JPAHelperUtil.commitTransaction();

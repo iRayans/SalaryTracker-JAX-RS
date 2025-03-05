@@ -22,11 +22,12 @@ public class SalaryDAO extends GenericCRUDImpl<Salary> implements ISalaryDAO {
     private static final Logger LOGGER = LogManager.getLogger(SalaryDAO.class.getName());
 
     @Override
-    public List<Salary> findSalaryByUserId(Long userId) {
-        String jpql = "SELECT s FROM Salary s WHERE s.user.id = :userId";
+    public List<Salary> findSalaryByUserId(Long userId, int year) {
+        String jpql = "SELECT s FROM Salary s WHERE year = :year AND  s.user.id = :userId";
         try {
             EntityManager em = JPAHelperUtil.getEntityManager();
             TypedQuery<Salary> query = em.createQuery(jpql, Salary.class);
+            query.setParameter("year", year);
             query.setParameter("userId", userId);
             return query.getResultList();
         } catch (NoResultException e) {

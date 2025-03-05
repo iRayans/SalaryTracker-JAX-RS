@@ -17,6 +17,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.security.Principal;
+import java.time.Year;
 import java.util.List;
 
 @Path("/salaries")
@@ -31,10 +32,13 @@ public class SalaryRestController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSalaries() throws EntityNotFoundException {
+    public Response getUserSalaries(@QueryParam("year") int year) {
         // Fetch salaries list based on logged-in user.
+        if (year <= 0) {
+            year = Year.now().getValue();
+        }
         Long userId = getLoggedinUser().getId();
-        List<SalaryReadOnlyDTO> salaries = salaryService.getAllUserSalaries(userId);
+        List<SalaryReadOnlyDTO> salaries = salaryService.getAllUserSalaries(userId, year);
 
         return Response.status(Response.Status.OK).entity(salaries).build();
     }

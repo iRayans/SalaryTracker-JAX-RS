@@ -5,7 +5,7 @@ import com.rayan.salarytracker.model.Salary;
 import java.util.List;
 
 public interface ISalaryDAO extends IGenericCRUD<Salary> {
-    List<Salary> findSalaryByUserId(Long userId);
+    List<Salary> findSalaryByUserId(Long userId, int year);
 
     boolean existsByUserIdAndMonthAndYear(Long userId, String month, int year);
 }
