@@ -79,5 +79,6 @@ The database consists of the following tables:
 - `GET /users/` – Retrieve all users.
 - `DELETE /users/{userId}` – Delete a user.
 
+### **To-do** , create a high-level architecture diagram
 
 
